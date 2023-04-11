@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 type SVGOutputProps = {
   width: number;
   height: number;
-  children: ReactElement;
+  children: ReactElement | ReactElement[];
 };
 
 export default function SVGOutput({ width, height, children }: SVGOutputProps) {

@@ -1,7 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import BasicFlow from "@/components/BasicFlow";
-import SVGOutput from "@/components/SVGOutput";
+import SVGNodeEditor from "@/components/SVGNodeEditor";
 
 export default function Home() {
   return (
@@ -13,10 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <BasicFlow />
-        <SVGOutput width={512} height={512}>
-          <path fill="#063855" fillRule="evenodd" d="M0 0h48v1H0z" />
-        </SVGOutput>
+        <SVGNodeEditor />
       </main>
     </>
   );
