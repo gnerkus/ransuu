@@ -5,6 +5,7 @@ export type Point = {
 
 export type PathData = {
   points: Point[];
+  attributes: PathAttributes;
 };
 
 export type PathAttributes = {

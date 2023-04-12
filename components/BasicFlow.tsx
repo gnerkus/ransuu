@@ -13,13 +13,17 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 const nodeTypes = {
-  custom: VectorNode,
+  svg_vectorNode: VectorNode,
+  svg_groupInputNode: GroupInputNode,
+  svg_groupOutputNode: GroupOutputNode,
 };
 
 import { nodes as initialNodes } from "./initialNodes";
 import VectorNode from "./nodes/VectorNode";
+import GroupInputNode from "./nodes/GroupInputNode";
+import GroupOutputNode from "./nodes/GroupOutputNode";
 
-export default function App() {
+export default function BasicFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   //   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 

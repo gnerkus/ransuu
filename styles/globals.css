@@ -109,3 +109,15 @@ a {
     color-scheme: dark;
   }
 }
+
+/*
+  React Flow custom styles
+*/
+.svgGenNode .react-flow__handle {
+  top: 50px;
+  right: -0.375rem;
+  width: .75rem;
+  height: .75rem;
+  border-radius: 100%;
+  background-color: #778899;
+}

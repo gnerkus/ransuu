@@ -29,26 +29,29 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
   };
 
   return (
-    <div className="flex gap-2 ">
-      <p className="px-2 py-1">{handleId.toUpperCase()}</p>
+    <div className="flex gap-2 hover:bg-gray-300">
+      <p className="pl-4 py-1">{handleId.toUpperCase()}</p>
       <input
         onChange={onChange}
         value={value}
-        className="text-end px-2 max-w-[128px] bg-transparent focus:outline-none"
+        className="appearance-none text-end pr-4 max-w-[128px] bg-transparent"
       />
-      <Handle type="source" position={Position.Right} id={handleId} />
     </div>
   );
 }
 
 function VectorNode({ id, data }: VectorNodeData) {
   return (
-    <div className="">
-      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg">
+    <div className="svgGenNode">
+      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Vector Node
       </div>
+      <div className="px-4 py-1 bg-gray-100 text-right max-h-[40px]">
+        Vector
+      </div>
+      <Handle type="source" position={Position.Right} id={id} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
-        <div className="bg-gray-200 text-gray-800 rounded-lg">
+        <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
           {Object.keys(data).map((handleId) => (
             <NodeTextInput
               key={handleId}
