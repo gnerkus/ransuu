@@ -1,5 +1,14 @@
 import { BaseNodeData } from "@/types/nodes";
 import { Point } from "@/types/path";
+import VectorNode from "./nodes/VectorNode";
+import GroupInputNode from "./nodes/GroupInputNode";
+import GroupOutputNode from "./nodes/GroupOutputNode";
+
+export const nodeTypes = {
+  svg_vectorNode: VectorNode,
+  svg_groupInputNode: GroupInputNode,
+  svg_groupOutputNode: GroupOutputNode,
+};
 
 export const nodes: BaseNodeData[] = [
   {
@@ -22,7 +31,7 @@ export const nodes: BaseNodeData[] = [
     },
   },
   {
-    id: "2",
+    id: "output",
     type: "svg_groupOutputNode",
     position: {
       x: 500,
@@ -36,7 +45,7 @@ export const nodes: BaseNodeData[] = [
           { x: 128, y: 128 },
           { x: 32, y: 128 },
         ] as Point[],
-        attributes: {},
+        attributes: { fill: "#cc3399", stroke: "##ffffff" },
       },
     },
   },

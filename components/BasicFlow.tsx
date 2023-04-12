@@ -1,39 +1,28 @@
-import React, { useCallback } from "react";
+import React from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Connection,
-  Edge,
+  Node,
+  NodeChange,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
-
-const nodeTypes = {
-  svg_vectorNode: VectorNode,
-  svg_groupInputNode: GroupInputNode,
-  svg_groupOutputNode: GroupOutputNode,
-};
-
-import { nodes as initialNodes } from "./initialNodes";
-import VectorNode from "./nodes/VectorNode";
-import GroupInputNode from "./nodes/GroupInputNode";
-import GroupOutputNode from "./nodes/GroupOutputNode";
 import { BaseNodeData } from "@/types/nodes";
 
-export default function BasicFlow() {
-  const [nodes, setNodes, onNodesChange] =
-    useNodesState<BaseNodeData>(initialNodes);
-  //   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
-  //   const onConnect = useCallback(
-  //     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-  //     [setEdges]
-  //   );
+type BasicFlowProps = {
+  nodes: Node<BaseNodeData, string | undefined>[];
+  onNodesChange: OnChange<NodeChange>;
+  nodeTypes: any;
+};
 
+export default function BasicFlow({
+  nodes,
+  onNodesChange,
+  nodeTypes,
+}: BasicFlowProps) {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
