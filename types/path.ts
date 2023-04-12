@@ -11,5 +11,5 @@ export type PathData = {
 export type PathAttributes = {
   fill: string;
   stroke: string;
-  transform: string;
+  transform?: string;
 };

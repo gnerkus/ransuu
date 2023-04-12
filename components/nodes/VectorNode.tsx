@@ -1,6 +1,7 @@
 import { VectorNodeData } from "@/types/nodes";
 import React, { ChangeEventHandler, memo } from "react";
 import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
+import CustomNodeWrapper from "../CustomNodeWrapper";
 
 type NodeTextInputProps = {
   value: string;
@@ -42,7 +43,7 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
 
 function VectorNode({ id, data }: VectorNodeData) {
   return (
-    <div className="svgGenNode">
+    <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Vector Node
       </div>
@@ -62,7 +63,7 @@ function VectorNode({ id, data }: VectorNodeData) {
           ))}
         </div>
       </div>
-    </div>
+    </CustomNodeWrapper>
   );
 }
 

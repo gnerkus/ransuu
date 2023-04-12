@@ -1,4 +1,7 @@
-export const nodes = [
+import { BaseNodeData } from "@/types/nodes";
+import { Point } from "@/types/path";
+
+export const nodes: BaseNodeData[] = [
   {
     id: "1",
     type: "svg_groupInputNode",
@@ -7,8 +10,15 @@ export const nodes = [
       y: 100,
     },
     data: {
-      points: [],
-      attributes: {},
+      path: {
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ] as Point[],
+        attributes: {},
+      },
     },
   },
   {
@@ -19,8 +29,15 @@ export const nodes = [
       y: 100,
     },
     data: {
-      points: [],
-      attributes: {},
+      path: {
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ] as Point[],
+        attributes: {},
+      },
     },
   },
   {

@@ -1,6 +1,7 @@
+import { useStoreApi } from "reactflow";
 import BasicFlow from "./BasicFlow";
 import Group from "./Group";
-import Rect from "./Rect";
+import Path from "./Path";
 import SVGOutput from "./SVGOutput";
 
 export default function SVGNodeEditor() {
@@ -9,7 +10,17 @@ export default function SVGNodeEditor() {
       <BasicFlow />
       <SVGOutput width={512} height={512}>
         <Group>
-          <Rect width={64} height={64} x={32} y={32} />
+          <Path
+            path={{
+              points: [
+                { x: 32, y: 32 },
+                { x: 128, y: 32 },
+                { x: 128, y: 128 },
+                { x: 32, y: 128 },
+              ],
+              attributes: { fill: "#ff0000", stroke: "##ffffff" },
+            }}
+          />
         </Group>
       </SVGOutput>
     </>

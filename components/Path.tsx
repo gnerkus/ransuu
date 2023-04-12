@@ -6,5 +6,11 @@ type PathProps = {
 };
 
 export default function Path({ path }: PathProps) {
-  return <path d={pointsToPath(path.points)}></path>;
+  return (
+    <path
+      d={pointsToPath(path.points)}
+      fill={path.attributes.fill}
+      stroke={path.attributes.stroke}
+    ></path>
+  );
 }

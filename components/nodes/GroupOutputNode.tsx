@@ -1,10 +1,11 @@
 import { GroupOutputNodeData } from "@/types/nodes";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
+import CustomNodeWrapper from "../CustomNodeWrapper";
 
-function GroupOutputNode({ id, data }: GroupOutputNodeData) {
+function GroupOutputNode({ id }: GroupOutputNodeData) {
   return (
-    <div className="svgGenNode min-w-[200px]">
+    <CustomNodeWrapper>
       <div className="bg-gray-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Group Output
       </div>
@@ -12,7 +13,7 @@ function GroupOutputNode({ id, data }: GroupOutputNodeData) {
         Shape
       </div>
       <Handle type="source" position={Position.Left} id={id} />
-    </div>
+    </CustomNodeWrapper>
   );
 }
 

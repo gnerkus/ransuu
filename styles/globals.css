@@ -113,6 +113,7 @@ a {
 /*
   React Flow custom styles
 */
+
 .svgGenNode .react-flow__handle {
   top: 50px;
   right: -0.375rem;

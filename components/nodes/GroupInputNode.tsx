@@ -1,10 +1,11 @@
 import { GroupInputNodeData } from "@/types/nodes";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
+import CustomNodeWrapper from "../CustomNodeWrapper";
 
-function GroupInputNode({ id, data }: GroupInputNodeData) {
+function GroupInputNode({ id }: GroupInputNodeData) {
   return (
-    <div className="svgGenNode min-w-[200px]">
+    <CustomNodeWrapper>
       <div className="bg-gray-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Group Input
       </div>
@@ -12,7 +13,7 @@ function GroupInputNode({ id, data }: GroupInputNodeData) {
         Shape
       </div>
       <Handle type="source" position={Position.Right} id={id} />
-    </div>
+    </CustomNodeWrapper>
   );
 }
 

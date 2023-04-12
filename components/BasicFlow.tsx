@@ -22,9 +22,11 @@ import { nodes as initialNodes } from "./initialNodes";
 import VectorNode from "./nodes/VectorNode";
 import GroupInputNode from "./nodes/GroupInputNode";
 import GroupOutputNode from "./nodes/GroupOutputNode";
+import { BaseNodeData } from "@/types/nodes";
 
 export default function BasicFlow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] =
+    useNodesState<BaseNodeData>(initialNodes);
   //   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   //   const onConnect = useCallback(

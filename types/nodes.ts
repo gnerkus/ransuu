@@ -1,9 +1,13 @@
 import { PathData, Point } from "./path";
 
-export type GroupInputNodeData = {
+export type BaseNodeData = {
   id: string;
-  type: "custom";
+  type: string;
   position: Point;
+  data: any;
+};
+
+export type GroupInputNodeData = BaseNodeData & {
   data: {
     path: PathData;
   };
@@ -11,9 +15,6 @@ export type GroupInputNodeData = {
 
 export type GroupOutputNodeData = GroupInputNodeData;
 
-export type VectorNodeData = {
-  id: string;
-  type: "custom";
-  position: Point;
+export type VectorNodeData = BaseNodeData & {
   data: Point;
 };
