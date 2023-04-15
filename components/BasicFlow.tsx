@@ -5,32 +5,40 @@ import ReactFlow, {
   Background,
   Node,
   NodeChange,
+  Edge,
+  EdgeChange,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { BaseNodeData } from "@/types/nodes";
+import { BaseEdgeData, BaseNodeData } from "@/types/nodes";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 type BasicFlowProps = {
   nodes: Node<BaseNodeData, string | undefined>[];
+  edges: Edge<BaseEdgeData>[];
   onNodesChange: OnChange<NodeChange>;
+  onEdgesChange: OnChange<EdgeChange>;
+  onConnect: any;
   nodeTypes: any;
 };
 
 export default function BasicFlow({
   nodes,
+  edges,
   onNodesChange,
+  onEdgesChange,
+  onConnect,
   nodeTypes,
 }: BasicFlowProps) {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
         nodes={nodes}
-        // edges={edges}
+        edges={edges}
         onNodesChange={onNodesChange}
-        // onEdgesChange={onEdgesChange}
-        // onConnect={onConnect}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
         nodeTypes={nodeTypes}
       >
         <Controls />

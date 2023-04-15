@@ -1,6 +1,12 @@
 import { VectorNodeData } from "@/types/nodes";
 import React, { ChangeEventHandler, memo } from "react";
-import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
+import {
+  Handle,
+  useReactFlow,
+  useStoreApi,
+  Position,
+  useNodeId,
+} from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 
 type NodeTextInputProps = {
@@ -33,6 +39,9 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
     <div className="flex gap-2 hover:bg-gray-300">
       <p className="pl-4 py-1">{handleId.toUpperCase()}</p>
       <input
+        type="number"
+        inputMode="numeric"
+        pattern="\d"
         onChange={onChange}
         value={value}
         className="appearance-none text-end pr-4 max-w-[128px] bg-transparent"
@@ -42,6 +51,8 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
 }
 
 function VectorNode({ id, data }: VectorNodeData) {
+  const nodeId = useNodeId();
+
   return (
     <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
@@ -50,13 +61,13 @@ function VectorNode({ id, data }: VectorNodeData) {
       <div className="px-4 py-1 bg-gray-100 text-right max-h-[40px]">
         Vector
       </div>
-      <Handle type="source" position={Position.Right} id={id} />
+      <Handle type="source" position={Position.Right} id={nodeId} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
           {Object.keys(data).map((handleId) => (
             <NodeTextInput
               key={handleId}
-              nodeId={id}
+              nodeId={nodeId}
               value={data[handleId]}
               handleId={handleId}
             />

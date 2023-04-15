@@ -10,9 +10,11 @@ export const nodeTypes = {
   svg_groupOutputNode: GroupOutputNode,
 };
 
+export const edges = [{ id: "e1-2", source: "input", target: "output" }];
+
 export const nodes: BaseNodeData[] = [
   {
-    id: "1",
+    id: "input",
     type: "svg_groupInputNode",
     position: {
       x: 100,

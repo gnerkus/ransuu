@@ -6,7 +6,7 @@ type CustomNodeWrapperProps = {
 
 function CustomNodeWrapper({ children }: CustomNodeWrapperProps) {
   return (
-    <div className="svgGenNode min-w-[200px] active:border border-gray-500">
+    <div className="svgGenNode min-w-[200px] active:border active:border-gray-500 active:rounded-lg">
       {children}
     </div>
   );

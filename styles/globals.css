@@ -122,3 +122,11 @@ a {
   border-radius: 100%;
   background-color: #778899;
 }
+
+input[type=number] {
+  appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  appearance: none;
+}

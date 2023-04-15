@@ -7,6 +7,12 @@ export type BaseNodeData = {
   data: any;
 };
 
+export type BaseEdgeData = {
+  id: string;
+  source: string;
+  target: string;
+};
+
 export type GroupInputNodeData = BaseNodeData & {
   data: {
     path: PathData;

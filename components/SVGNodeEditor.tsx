@@ -1,43 +1,38 @@
-import { useNodesState } from "reactflow";
+import { addEdge, useEdgesState, useNodesState } from "reactflow";
 import BasicFlow from "./BasicFlow";
-import Group from "./Group";
-import Path from "./Path";
 import SVGOutput from "./SVGOutput";
 import { BaseNodeData } from "@/types/nodes";
 
 import "reactflow/dist/style.css";
-import { nodes as initialNodes, nodeTypes } from "./initialNodes";
+import {
+  nodes as initialNodes,
+  nodeTypes,
+  edges as initialEdges,
+} from "./initialNodes";
+import { useCallback } from "react";
 
 export default function SVGNodeEditor() {
   const [nodes, setNodes, onNodesChange] =
     useNodesState<BaseNodeData>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const onConnect = useCallback(
+    (params: any) => setEdges((eds) => addEdge(params, eds)),
+    []
+  );
 
   const outputNode = nodes.filter((node) => node.id === "output")[0];
-
-  const path = outputNode
-    ? outputNode.data.path
-    : {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ],
-        attributes: { fill: "#ff0000", stroke: "##ffffff" },
-      };
 
   return (
     <>
       <BasicFlow
         nodes={nodes}
+        edges={edges}
         onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
         nodeTypes={nodeTypes}
       />
-      <SVGOutput width={512} height={512}>
-        <Group>
-          <Path path={path} />
-        </Group>
-      </SVGOutput>
+      <SVGOutput width={512} height={512} svgOutput={outputNode.data} />
     </>
   );
 }

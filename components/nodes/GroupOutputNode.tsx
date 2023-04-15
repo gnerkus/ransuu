@@ -12,7 +12,7 @@ function GroupOutputNode({ id }: GroupOutputNodeData) {
       <div className="px-4 py-1 bg-gray-100 text-left max-h-[40px] rounded-b-lg">
         Shape
       </div>
-      <Handle type="source" position={Position.Left} id={id} />
+      <Handle type="target" position={Position.Left} id={id} />
     </CustomNodeWrapper>
   );
 }
