@@ -20,6 +20,10 @@ export const nodes: BaseNodeData[] = [
       x: 100,
       y: 100,
     },
+    isSelected: false,
+    inputs: [],
+    outputs: ["output"],
+    operation: null,
     data: {
       path: {
         points: [
@@ -39,6 +43,10 @@ export const nodes: BaseNodeData[] = [
       x: 500,
       y: 100,
     },
+    isSelected: false,
+    inputs: ["input"],
+    outputs: [],
+    operation: null,
     data: {
       path: {
         points: [
@@ -58,6 +66,10 @@ export const nodes: BaseNodeData[] = [
       x: 300,
       y: 200,
     },
+    isSelected: false,
+    inputs: [],
+    outputs: [],
+    operation: null,
     data: {
       x: 1,
       y: 1,

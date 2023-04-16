@@ -11,13 +11,23 @@ import {
 } from "./initialNodes";
 import { useCallback } from "react";
 
+type EdgeConnectParams = {
+  source: string;
+  sourceHandle: string;
+  target: string;
+  targetHandle: string;
+};
+
 export default function SVGNodeEditor() {
   const [nodes, setNodes, onNodesChange] =
     useNodesState<BaseNodeData>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    []
+    (params: EdgeConnectParams) =>
+      setEdges((eds) => {
+        return addEdge(params, eds);
+      }),
+    [setEdges]
   );
 
   const outputNode = nodes.filter((node) => node.id === "output")[0];

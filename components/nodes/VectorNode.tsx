@@ -51,8 +51,6 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
 }
 
 function VectorNode({ id, data }: VectorNodeData) {
-  const nodeId = useNodeId();
-
   return (
     <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
@@ -61,14 +59,14 @@ function VectorNode({ id, data }: VectorNodeData) {
       <div className="px-4 py-1 bg-gray-100 text-right max-h-[40px]">
         Vector
       </div>
-      <Handle type="source" position={Position.Right} id={nodeId} />
+      <Handle type="source" position={Position.Right} id={id} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
           {Object.keys(data).map((handleId) => (
             <NodeTextInput
               key={handleId}
-              nodeId={nodeId}
-              value={data[handleId]}
+              nodeId={id}
+              value={`${data[handleId as "x" | "y"]}`}
               handleId={handleId}
             />
           ))}
