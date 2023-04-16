@@ -11,13 +11,13 @@ import ReactFlow, {
 } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { BaseEdgeData, BaseNodeData } from "@/types/nodes";
+import { BaseEdge, BaseNodeData } from "@/types/nodes";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 type BasicFlowProps = {
   nodes: Node<BaseNodeData, string | undefined>[];
-  edges: Edge<BaseEdgeData>[];
+  edges: Edge<BaseEdge>[];
   onNodesChange: OnChange<NodeChange>;
   onEdgesChange: OnChange<EdgeChange>;
   onConnect: any;

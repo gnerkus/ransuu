@@ -3,34 +3,36 @@ import { PathData, Point } from "./path";
 type NodeOperation = (input: NodeInputData) => NodeOutputData;
 
 export type BaseNodeData = {
-  id: string;
-  type: string;
-  position: Point;
   isSelected: boolean;
   inputs: string[];
   outputs: string[];
   operation: NodeOperation | null;
-  data: any;
+  nodeData: any;
 };
 
-export type BaseEdgeData = {
+export type BaseNode = {
+  id: string;
+  type: string;
+  position: Point;
+  data: BaseNodeData;
+};
+
+export type BaseEdge = {
   id: string;
   source: string;
   target: string;
 };
 
-export type GroupInputNodeData = BaseNodeData & {
-  data: PathData;
+export type GroupInputNode = BaseNode & {
+  data: BaseNodeData & { nodeData: PathData };
 };
 
-export type GroupOutputNodeData = GroupInputNodeData;
+export type GroupOutputNode = GroupInputNode;
 
-export type NodeInputData = {
-  data: Point; // TODO: add other types of input data
+export type NodeInputData = Point;
+
+export type NodeOutputData = Point;
+
+export type VectorNode = BaseNode & {
+  data: BaseNodeData & { nodeData: Point };
 };
-
-export type NodeOutputData = {
-  data: Point;
-};
-
-export type VectorNodeData = BaseNodeData & { data: Point };

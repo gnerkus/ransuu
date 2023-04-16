@@ -1,4 +1,4 @@
-import { BaseNodeData } from "@/types/nodes";
+import { BaseNode } from "@/types/nodes";
 import { Point } from "@/types/path";
 import VectorNode from "./nodes/VectorNode";
 import GroupInputNode from "./nodes/GroupInputNode";
@@ -12,7 +12,7 @@ export const nodeTypes = {
 
 export const edges = [{ id: "e1-2", source: "input", target: "output" }];
 
-export const nodes: BaseNodeData[] = [
+export const nodes: BaseNode[] = [
   {
     id: "input",
     type: "svg_groupInputNode",
@@ -20,12 +20,12 @@ export const nodes: BaseNodeData[] = [
       x: 100,
       y: 100,
     },
-    isSelected: false,
-    inputs: [],
-    outputs: ["output"],
-    operation: null,
     data: {
-      path: {
+      isSelected: false,
+      inputs: [],
+      outputs: ["output"],
+      operation: null,
+      nodeData: {
         points: [
           { x: 32, y: 32 },
           { x: 128, y: 32 },
@@ -43,12 +43,12 @@ export const nodes: BaseNodeData[] = [
       x: 500,
       y: 100,
     },
-    isSelected: false,
-    inputs: ["input"],
-    outputs: [],
-    operation: null,
     data: {
-      path: {
+      isSelected: false,
+      inputs: ["input"],
+      outputs: [],
+      operation: null,
+      nodeData: {
         points: [
           { x: 32, y: 32 },
           { x: 128, y: 32 },
@@ -66,13 +66,16 @@ export const nodes: BaseNodeData[] = [
       x: 300,
       y: 200,
     },
-    isSelected: false,
-    inputs: [],
-    outputs: [],
-    operation: null,
+
     data: {
-      x: 1,
-      y: 1,
+      isSelected: false,
+      inputs: [],
+      outputs: [],
+      operation: null,
+      nodeData: {
+        x: 1,
+        y: 1,
+      },
     },
   },
 ];

@@ -1,11 +1,11 @@
-import { GroupOutputNodeData } from "@/types/nodes";
+import { BaseNodeData, GroupOutputNode } from "@/types/nodes";
 import Group from "./Group";
 import Path from "./Path";
 
 type SVGOutputProps = {
   width: number;
   height: number;
-  svgOutput: GroupOutputNodeData;
+  svgOutput: BaseNodeData;
 };
 
 export default function SVGOutput({
@@ -13,7 +13,7 @@ export default function SVGOutput({
   height,
   svgOutput,
 }: SVGOutputProps) {
-  const path = svgOutput.data || {
+  const path = svgOutput.nodeData || {
     points: [
       { x: 32, y: 32 },
       { x: 128, y: 32 },

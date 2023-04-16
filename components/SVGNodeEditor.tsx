@@ -1,7 +1,7 @@
 import { addEdge, useEdgesState, useNodesState } from "reactflow";
 import BasicFlow from "./BasicFlow";
 import SVGOutput from "./SVGOutput";
-import { BaseNodeData } from "@/types/nodes";
+import { BaseNode, BaseNodeData } from "@/types/nodes";
 
 import "reactflow/dist/style.css";
 import {
@@ -9,7 +9,7 @@ import {
   nodeTypes,
   edges as initialEdges,
 } from "./initialNodes";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 type EdgeConnectParams = {
   source: string;
@@ -29,6 +29,10 @@ export default function SVGNodeEditor() {
       }),
     [setEdges]
   );
+
+  useEffect(() => {
+    const selectedInputNode = nodes.filter((node) => node.data.isSelected);
+  }, [nodes]);
 
   const outputNode = nodes.filter((node) => node.id === "output")[0];
 

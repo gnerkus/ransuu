@@ -1,12 +1,6 @@
-import { VectorNodeData } from "@/types/nodes";
+import { VectorNode } from "@/types/nodes";
 import React, { ChangeEventHandler, memo } from "react";
-import {
-  Handle,
-  useReactFlow,
-  useStoreApi,
-  Position,
-  useNodeId,
-} from "reactflow";
+import { Handle, useReactFlow, useStoreApi, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 
 type NodeTextInputProps = {
@@ -26,7 +20,11 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
         if (node.id === nodeId) {
           node.data = {
             ...node.data,
-            [handleId]: evt.target.value,
+            isSelected: true,
+            nodeData: {
+              ...node.data.nodeData,
+              [handleId]: evt.target.value,
+            },
           };
         }
 
@@ -50,7 +48,7 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
   );
 }
 
-function VectorNode({ id, data }: VectorNodeData) {
+function VectorNode({ id, data }: VectorNode) {
   return (
     <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
@@ -62,11 +60,11 @@ function VectorNode({ id, data }: VectorNodeData) {
       <Handle type="source" position={Position.Right} id={id} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-          {Object.keys(data).map((handleId) => (
+          {Object.keys(data.nodeData).map((handleId) => (
             <NodeTextInput
               key={handleId}
               nodeId={id}
-              value={`${data[handleId as "x" | "y"]}`}
+              value={`${data.nodeData[handleId as "x" | "y"]}`}
               handleId={handleId}
             />
           ))}
