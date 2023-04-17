@@ -10,14 +10,6 @@ export const nodeTypes = {
   svg_groupOutputNode: GroupOutputNode,
 };
 
-type OperationsMap = {
-  [index: string]: NodeOperation;
-};
-
-const nodeOperations: OperationsMap = {};
-
-type NodeOperation = (input: NodeInputData) => NodeOutputData;
-
 export type BaseNodeData = Point | PathData;
 export type BaseNodeUpdateData = Record<string, string>;
 

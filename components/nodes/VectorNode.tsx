@@ -14,7 +14,7 @@ type NodeTextInputProps = {
 
 const selector = (id: string) => (store: FlowState) => ({
   setVector: (handleId: string) => (e: ChangeEvent<HTMLInputElement>) =>
-    store.updateNode(id, {
+    store.handleInputUpdate(id, {
       [handleId]: e.target.value,
     }),
 });

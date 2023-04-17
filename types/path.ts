@@ -3,6 +3,12 @@ export type Point = {
   y: number;
 };
 
+export type Rotation = {
+  angle: number;
+  centerX: number;
+  centerY: number;
+};
+
 export type PathData = {
   points: Point[];
   attributes: PathAttributes;
@@ -11,5 +17,11 @@ export type PathData = {
 export type PathAttributes = {
   fill: string;
   stroke: string;
-  transform?: string;
+  transform?: {
+    translate?: number[];
+    rotate?: number[];
+    skewX?: number;
+    skewY?: number;
+    scale?: number[];
+  };
 };

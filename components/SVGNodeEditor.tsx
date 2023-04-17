@@ -13,6 +13,7 @@ import { FlowState, useStore } from "@/store/store";
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";
 
+// we no longer read from ReactFlow's own store; we read from our own store
 const selector = (store: FlowState) => ({
   nodes: store.nodes,
   edges: store.edges,
