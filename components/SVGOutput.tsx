@@ -14,7 +14,7 @@ export default function SVGOutput({
   height,
   svgOutput,
 }: SVGOutputProps) {
-  const path = svgOutput || {
+  const path = svgOutput.path || {
     points: [
       { x: 32, y: 32 },
       { x: 128, y: 32 },

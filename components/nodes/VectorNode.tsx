@@ -4,24 +4,28 @@ import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { shallow } from "zustand/shallow";
 import { FlowState, useStore } from "@/store/store";
-import { Point } from "@/types/path";
 
 type NodeTextInputProps = {
   value: string;
   handleId: string;
-  nodeId: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const selector = (id: string) => (store: FlowState) => ({
-  setVector: (handleId: string) => (e: ChangeEvent<HTMLInputElement>) =>
-    store.handleInputUpdate(id, {
-      [handleId]: e.target.value,
-    }),
+  vectorValue: store.nodes.filter((node) => node.id === id)[0],
+  setVector:
+    (handleId: string, nodeHandle?: string) =>
+    (e: ChangeEvent<HTMLInputElement>) =>
+      store.updateNode(
+        id,
+        {
+          [handleId]: e.target.value,
+        },
+        nodeHandle
+      ),
 });
 
-function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
-  const { setVector } = useStore(selector(nodeId), shallow);
-
+function NodeTextInput({ value, handleId, onChange }: NodeTextInputProps) {
   return (
     <div className="flex gap-2 hover:bg-gray-300">
       <p className="pl-4 py-1">{handleId.toUpperCase()}</p>
@@ -29,7 +33,7 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
         type="number"
         inputMode="numeric"
         pattern="\d"
-        onChange={setVector(handleId)}
+        onChange={onChange}
         value={value}
         className="nodrag appearance-none text-end pr-4 max-w-[128px] bg-transparent"
       />
@@ -38,6 +42,9 @@ function NodeTextInput({ value, handleId, nodeId }: NodeTextInputProps) {
 }
 
 function VectorNode({ id, data }: VectorNode) {
+  const { setVector, vectorValue } = useStore(selector(id), shallow);
+
+  const value = vectorValue.data.data ? vectorValue.data.data : data.data;
   return (
     <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
@@ -49,12 +56,12 @@ function VectorNode({ id, data }: VectorNode) {
       <Handle type="source" position={Position.Right} id={id} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-          {Object.keys(data).map((handleId) => (
+          {Object.keys(data.data).map((handleId) => (
             <NodeTextInput
               key={handleId}
-              nodeId={id}
-              value={`${data[handleId as "x" | "y"]}`}
               handleId={handleId}
+              value={`${value[handleId as "x" | "y"]}`}
+              onChange={setVector(handleId, vectorValue.data.handle)}
             />
           ))}
         </div>

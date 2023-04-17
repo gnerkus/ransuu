@@ -11,22 +11,27 @@ import {
   BaseEdge,
   BaseEdgeData,
   BaseNode,
+  BaseNodeData,
   BaseNodeUpdateData,
 } from "@/types/nodes";
-import { generateSVGOutput } from "@/context/SVGContext";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
+type ChangedNodeParams = {
+  id: string;
+  handle?: string;
+  data: any;
+};
+
 export type FlowState = {
   initialPath: PathData;
+  changedNode?: ChangedNodeParams;
   nodes: BaseNode[];
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
   onEdgesChange: OnChange<EdgeChange>;
   addEdge: (data: BaseEdgeData) => void;
-  updateNode: (id: string, data: BaseNodeUpdateData) => void;
-  updateOutput: (data: PathData) => void;
-  handleInputUpdate: (id: string, data: BaseNodeUpdateData) => void;
+  updateNode: (id: string, data: any, handle?: string) => void;
 };
 
 export const useStore = create<FlowState>((set, get) => ({
@@ -48,13 +53,17 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ] as Point[],
-        attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        inputs: [],
+        outputs: ["output"],
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ] as Point[],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
       },
     },
     {
@@ -65,13 +74,17 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ] as Point[],
-        attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        inputs: ["input"],
+        outputs: [],
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ] as Point[],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
       },
     },
     {
@@ -81,10 +94,13 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 300,
         y: 200,
       },
-
       data: {
-        x: 1,
-        y: 1,
+        inputs: [],
+        outputs: [],
+        data: {
+          x: 1,
+          y: 1,
+        },
       },
     },
   ],
@@ -115,30 +131,19 @@ export const useStore = create<FlowState>((set, get) => ({
     set({ edges: [edge, ...get().edges] });
   },
 
-  updateNode(id, data) {
-    /**
-     * TODO:
-     * - run the generator
-     * - save output of generator to the output node
-     */
+  updateNode(id, data, handle) {
     set({
+      changedNode: {
+        id,
+        data,
+        handle,
+      },
       nodes: get().nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, ...data } } : node
-      ),
-    });
-  },
-
-  handleInputUpdate(id, data) {
-    this.updateNode(id, data);
-    const outputUpdate = generateSVGOutput(this.initialPath, id);
-    this.updateOutput(outputUpdate);
-  },
-
-  updateOutput(data) {
-    set({
-      nodes: get().nodes.map((node) =>
-        node.id === "output"
-          ? { ...node, data: { ...node.data, ...data } }
+        node.id === id
+          ? {
+              ...node,
+              data: { ...node.data, data: { ...node.data.data, ...data } },
+            }
           : node
       ),
     });
