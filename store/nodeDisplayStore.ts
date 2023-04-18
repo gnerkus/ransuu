@@ -48,6 +48,15 @@ export const useStore = create<FlowState>((set, get) => ({
       },
       data: {},
     },
+    {
+      id: "transform_1",
+      type: "svg_transformNode",
+      position: {
+        x: 500,
+        y: 200,
+      },
+      data: {},
+    },
   ],
   edges: [
     {

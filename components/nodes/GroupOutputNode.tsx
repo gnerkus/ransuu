@@ -2,25 +2,8 @@ import { GroupOutputNode } from "@/types/nodes";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
-import { FlowState, useStore } from "@/store/nodeDisplayStore";
-import { shallow } from "zustand/shallow";
-import { PathData } from "@/types/path";
 
-const selector = (store: FlowState) => ({
-  changedNode: store.changedNode,
-  setOutput: (outputData: PathData) => {
-    store.updateNode("output", outputData);
-  },
-});
-
-function GroupOutputNode({ id, data }: GroupOutputNode) {
-  const { changedNode, setOutput } = useStore(selector, shallow);
-
-  const inputs = data.inputs;
-  if (changedNode && changedNode?.id in inputs) {
-    setOutput(changedNode.data);
-  }
-
+function GroupOutputNode({ id }: GroupOutputNode) {
   return (
     <CustomNodeWrapper>
       <div className="bg-gray-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">

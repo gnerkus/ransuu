@@ -3,9 +3,11 @@ import { PathData, Point, Transform } from "./path";
 import { XYPosition } from "reactflow";
 import GroupInputNode from "@/components/nodes/GroupInputNode";
 import GroupOutputNode from "@/components/nodes/GroupOutputNode";
+import TransformNode from "@/components/nodes/TransformNode";
 
 export const nodeTypes = {
   svg_vectorNode: VectorNode,
+  svg_transformNode: TransformNode,
   svg_groupInputNode: GroupInputNode,
   svg_groupOutputNode: GroupOutputNode,
 };
@@ -53,9 +55,3 @@ export type GroupOutputNode = GroupInputNode;
 export type NodeInputData = Point;
 
 export type NodeOutputData = Point;
-
-export type VectorNode = BaseNode & { data: BaseNodeData & { data: Point } };
-
-export type TransformNode = BaseNode & {
-  data: BaseNodeData & { path: PathData; data: Transform };
-};
