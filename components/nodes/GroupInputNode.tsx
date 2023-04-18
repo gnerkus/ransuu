@@ -11,7 +11,7 @@ function GroupInputNode({ id }: GroupInputNode) {
       </div>
       <div className="relative">
         <div className="px-4 py-1 bg-gray-100 text-right max-h-[40px] rounded-b-lg">
-          Shape
+          Path
         </div>
         <Handle type="source" position={Position.Right} id={id} />
       </div>

@@ -28,7 +28,7 @@ function TransformNode({ id }: BaseNode) {
         <Handle
           type="target"
           position={Position.Left}
-          id={`${id}_path`}
+          id="path"
           style={{ backgroundColor: "rgb(16 185 129)" }}
         />
       </div>
@@ -38,7 +38,7 @@ function TransformNode({ id }: BaseNode) {
         <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
           Translation:
         </div>
-        <Handle type="target" position={Position.Left} id={`${id}_translate`} />
+        <Handle type="target" position={Position.Left} id="translate" />
         <div className="bg-gray-50 p-4 rounded-b-lg">
           <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
             {Object.keys(nodeValue.data.translate).map((handleId) => (
@@ -61,7 +61,7 @@ function TransformNode({ id }: BaseNode) {
         <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
           Rotation:
         </div>
-        <Handle type="target" position={Position.Left} id={`${id}_rotate`} />
+        <Handle type="target" position={Position.Left} id="rotate" />
         <div className="bg-gray-50 p-4 rounded-b-lg">
           <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
             {Object.keys(nodeValue.data.rotate).map((handleId) => (
@@ -88,7 +88,7 @@ function TransformNode({ id }: BaseNode) {
         <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
           Scale:
         </div>
-        <Handle type="target" position={Position.Left} id={`${id}_scale`} />
+        <Handle type="target" position={Position.Left} id="scale" />
         <div className="bg-gray-50 p-4 rounded-b-lg">
           <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
             {Object.keys(nodeValue.data.scale).map((handleId) => (
@@ -109,7 +109,7 @@ function TransformNode({ id }: BaseNode) {
       {/* Skew */}
       <div className="relative">
         <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">Skew:</div>
-        <Handle type="target" position={Position.Left} id={`${id}_skew`} />
+        <Handle type="target" position={Position.Left} id="skew" />
         <div className="bg-gray-50 p-4 rounded-b-lg">
           <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
             {Object.keys(nodeValue.data.skew).map((handleId) => (

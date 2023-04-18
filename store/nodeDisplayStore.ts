@@ -3,11 +3,11 @@ import {
   applyEdgeChanges,
   NodeChange,
   EdgeChange,
+  Connection,
 } from "reactflow";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
-import { Point } from "@/types/path";
-import { BaseEdge, BaseEdgeData, BaseNode } from "@/types/nodes";
+import { BaseEdge, BaseNode } from "@/types/nodes";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
@@ -16,7 +16,7 @@ export type FlowState = {
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
   onEdgesChange: OnChange<EdgeChange>;
-  addEdge: (data: BaseEdgeData) => void;
+  addEdge: (data: Connection) => void;
 };
 
 export const useStore = create<FlowState>((set, get) => ({
@@ -63,6 +63,8 @@ export const useStore = create<FlowState>((set, get) => ({
       id: "e1-2",
       source: "input",
       target: "output",
+      sourceHandle: null,
+      targetHandle: null,
     },
   ],
 
@@ -80,7 +82,12 @@ export const useStore = create<FlowState>((set, get) => ({
 
   addEdge(data) {
     const id = nanoid(6);
-    const edge = { id, ...data };
+    const edge = {
+      ...data,
+      id,
+      source: data.source || "",
+      target: data.target || "",
+    };
 
     set({ edges: [edge, ...get().edges] });
   },

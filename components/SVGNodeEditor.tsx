@@ -5,6 +5,7 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   ReactFlowProvider,
+  Connection,
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
@@ -28,11 +29,22 @@ const selector = (store: FlowState) => ({
 
 const dataSelector = (store: NodeDataState) => ({
   output: store.nodes["output"],
+  addDataEdge: store.actions.addEdge,
 });
+
+type CustomAddEgde = (
+  callback: (connection: Connection) => void
+) => (data: Connection) => void;
 
 export default function SVGNodeEditor() {
   const store = useStore(selector, shallow);
-  const dataStore = useNodeDataStore(dataSelector, shallow);
+  const { output, addDataEdge } = useNodeDataStore(dataSelector, shallow);
+
+  const customAddEgde: CustomAddEgde =
+    (callback) => (connection: Connection) => {
+      callback(connection);
+      store.addEdge(connection);
+    };
 
   return (
     <ReactFlowProvider>
@@ -42,7 +54,7 @@ export default function SVGNodeEditor() {
           edges={store.edges}
           onNodesChange={store.onNodesChange}
           onEdgesChange={store.onEdgesChange}
-          onConnect={store.addEdge}
+          onConnect={customAddEgde(addDataEdge)}
           nodeTypes={nodeTypes}
           fitView
         >
@@ -51,7 +63,7 @@ export default function SVGNodeEditor() {
           <Background variant={"dots" as BackgroundVariant} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SVGOutput width={512} height={512} svgOutput={dataStore.output} />
+      <SVGOutput width={512} height={512} svgOutput={output} />
     </ReactFlowProvider>
   );
 }

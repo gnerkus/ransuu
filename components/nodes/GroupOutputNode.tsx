@@ -11,7 +11,7 @@ function GroupOutputNode({ id }: GroupOutputNode) {
       </div>
       <div className="relative">
         <div className="px-4 py-1 bg-gray-100 text-left max-h-[40px] rounded-b-lg">
-          Shape
+          Path
         </div>
         <Handle type="target" position={Position.Left} id={id} />
       </div>

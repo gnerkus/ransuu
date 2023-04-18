@@ -5,6 +5,7 @@ import { BaseNodeData } from "@/types/nodes";
 import { ChangeEvent } from "react";
 import lodashSet from "lodash.set";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { Connection } from "reactflow";
 
 export type NodeDataState = {
   nodes: Record<string, BaseNodeData>;
@@ -15,6 +16,7 @@ export type NodeDataState = {
       inputHandle: string,
       handle?: string
     ) => void;
+    addEdge: (connection: Connection) => void;
   };
 };
 
@@ -106,6 +108,25 @@ export const useStore = create<NodeDataState>((set, get) => ({
               lodashSet(draftState[outputId].data, handle, data);
             }),
           });
+        });
+      }
+    },
+    addEdge(connection) {
+      if (
+        typeof connection.source === "string" &&
+        typeof connection.target === "string"
+      ) {
+        set({
+          nodes: produce(get().nodes, (draftState) => {
+            lodashSet(
+              draftState[connection.source as string],
+              "handle",
+              connection.targetHandle
+            );
+            draftState[connection.source as string].outputs.push(
+              connection.target as string
+            );
+          }),
         });
       }
     },

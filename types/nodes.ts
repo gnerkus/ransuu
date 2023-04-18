@@ -1,4 +1,5 @@
 import VectorNode from "@/components/nodes/VectorNode";
+import { Connection, Edge } from "reactflow";
 import { PathData, Point, Transform } from "./path";
 import { XYPosition } from "reactflow";
 import GroupInputNode from "@/components/nodes/GroupInputNode";
@@ -42,9 +43,7 @@ export type BaseEdgeData = {
   targetHandle?: string | null;
 };
 
-export type BaseEdge = BaseEdgeData & {
-  id: string;
-};
+export type BaseEdge = Edge;
 
 export type GroupInputNode = BaseNode & {
   data: BaseNodeData & { path: PathData };
