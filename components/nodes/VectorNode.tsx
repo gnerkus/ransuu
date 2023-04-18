@@ -3,7 +3,10 @@ import React, { ChangeEvent, memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { shallow } from "zustand/shallow";
-import { FlowState, useStore } from "@/store/store";
+import {
+  NodeDataState,
+  useStore as useNodeDataStore,
+} from "@/store/nodeDataStore";
 
 type NodeTextInputProps = {
   value: string;
@@ -11,18 +14,12 @@ type NodeTextInputProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const selector = (id: string) => (store: FlowState) => ({
-  vectorValue: store.nodes.filter((node) => node.id === id)[0],
+const selector = (id: string) => (store: NodeDataState) => ({
+  vectorValue: store.nodes[id],
   setVector:
     (handleId: string, nodeHandle?: string) =>
     (e: ChangeEvent<HTMLInputElement>) =>
-      store.updateNode(
-        id,
-        {
-          [handleId]: e.target.value,
-        },
-        nodeHandle
-      ),
+      store.updateNode(id, e.target.value, handleId, nodeHandle),
 });
 
 function NodeTextInput({ value, handleId, onChange }: NodeTextInputProps) {
@@ -42,9 +39,7 @@ function NodeTextInput({ value, handleId, onChange }: NodeTextInputProps) {
 }
 
 function VectorNode({ id, data }: VectorNode) {
-  const { setVector, vectorValue } = useStore(selector(id), shallow);
-
-  const value = vectorValue.data.data ? vectorValue.data.data : data.data;
+  const { setVector, vectorValue } = useNodeDataStore(selector(id), shallow);
   return (
     <CustomNodeWrapper>
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
@@ -56,11 +51,11 @@ function VectorNode({ id, data }: VectorNode) {
       <Handle type="source" position={Position.Right} id={id} />
       <div className="bg-gray-100 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-          {Object.keys(data.data).map((handleId) => (
+          {Object.keys(vectorValue.data).map((handleId) => (
             <NodeTextInput
               key={handleId}
               handleId={handleId}
-              value={`${value[handleId as "x" | "y"]}`}
+              value={`${vectorValue.data[handleId as "x" | "y"]}`}
               onChange={setVector(handleId, vectorValue.data.handle)}
             />
           ))}

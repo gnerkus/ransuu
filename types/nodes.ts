@@ -21,8 +21,7 @@ export type BaseNodeData = {
   outputs: string[];
   handle?: string; // name of the field on the target node to which this node is attached
   path?: PathData;
-  operation?: BaseNodeOperation;
-  data?: Point;
+  data?: any;
 };
 
 export type BaseNodeUpdateData = Record<string, string>;
@@ -31,7 +30,7 @@ export type BaseNode = {
   id: string;
   type?: string;
   position: XYPosition;
-  data: BaseNodeData;
+  data: any;
 };
 
 export type BaseEdgeData = {

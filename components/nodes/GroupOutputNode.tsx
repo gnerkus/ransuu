@@ -2,7 +2,7 @@ import { GroupOutputNode } from "@/types/nodes";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
-import { FlowState, useStore } from "@/store/store";
+import { FlowState, useStore } from "@/store/nodeDisplayStore";
 import { shallow } from "zustand/shallow";
 import { PathData } from "@/types/path";
 
