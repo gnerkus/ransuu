@@ -19,10 +19,13 @@ export type BaseNodeOperation = (
   data: any
 ) => PathData;
 
+export type HandleOutputPair = {
+  handle: string;
+  id: string;
+};
+
 export type BaseNodeData = {
-  inputs: string[];
-  outputs: string[];
-  handle?: string; // name of the field on the target node to which this node is attached
+  outputs: Set<HandleOutputPair>;
   path?: PathData;
   data?: any;
 };

@@ -63,7 +63,7 @@ export default function SVGNodeEditor() {
           <Background variant={"dots" as BackgroundVariant} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SVGOutput width={512} height={512} svgOutput={output} />
+      <SVGOutput width={512} height={512} svgOutput={output.data} />
     </ReactFlowProvider>
   );
 }

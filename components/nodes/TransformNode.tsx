@@ -7,6 +7,9 @@ import { NodeTextInput } from "../NodeTextInput";
 
 function TransformNode({ id }: BaseNode) {
   const { nodeValue, handleNodeInput } = useNodeData(id);
+
+  // TODO: compute path and update output node
+
   return (
     <CustomNodeWrapper>
       <div className="bg-emerald-600 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">

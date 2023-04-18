@@ -1,11 +1,13 @@
-import { produce } from "immer";
+import { produce, enableMapSet } from "immer";
 import { create } from "zustand";
 import { Point } from "@/types/path";
-import { BaseNodeData } from "@/types/nodes";
+import { BaseNodeData, HandleOutputPair } from "@/types/nodes";
 import { ChangeEvent } from "react";
 import lodashSet from "lodash.set";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Connection } from "reactflow";
+
+enableMapSet();
 
 export type NodeDataState = {
   nodes: Record<string, BaseNodeData>;
@@ -37,42 +39,45 @@ export const useNodeData = (nodeId: string) =>
 export const useStore = create<NodeDataState>((set, get) => ({
   nodes: {
     input: {
-      inputs: [],
-      outputs: ["output"],
-      path: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ] as Point[],
-        attributes: { fill: "#cc3399", stroke: "##ffffff" },
+      outputs: new Set<HandleOutputPair>().add({
+        id: "output",
+        handle: "path",
+      }),
+      data: {
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ] as Point[],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
       },
     },
     output: {
-      inputs: ["input"],
-      outputs: [],
-      path: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ] as Point[],
-        attributes: { fill: "#cc3399", stroke: "##ffffff" },
+      outputs: new Set<HandleOutputPair>(),
+      data: {
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ] as Point[],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
       },
     },
     vector_1: {
-      inputs: [],
-      outputs: [],
+      outputs: new Set<HandleOutputPair>(),
       data: {
         x: 1,
         y: 1,
       },
     },
     transform_1: {
-      inputs: [],
-      outputs: [],
+      outputs: new Set<HandleOutputPair>(),
       data: {
         path: {
           points: [
@@ -101,15 +106,17 @@ export const useStore = create<NodeDataState>((set, get) => ({
         }),
       });
 
-      if (handle) {
-        outputs.forEach((outputId) => {
-          set({
-            nodes: produce(get().nodes, (draftState) => {
-              lodashSet(draftState[outputId].data, handle, data);
-            }),
-          });
+      outputs.forEach((handleOutputPair) => {
+        set({
+          nodes: produce(get().nodes, (draftState) => {
+            lodashSet(
+              draftState[handleOutputPair.id].data,
+              `${handleOutputPair.handle}.${inputHandle}`,
+              data
+            );
+          }),
         });
-      }
+      });
     },
     addEdge(connection) {
       if (
@@ -123,9 +130,10 @@ export const useStore = create<NodeDataState>((set, get) => ({
               "handle",
               connection.targetHandle
             );
-            draftState[connection.source as string].outputs.push(
-              connection.target as string
-            );
+            draftState[connection.source as string].outputs.add({
+              id: connection.target as string,
+              handle: connection.targetHandle as string,
+            });
           }),
         });
       }
