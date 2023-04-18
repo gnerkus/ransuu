@@ -1,7 +1,10 @@
+import { produce } from "immer";
 import { create } from "zustand";
 import { Point } from "@/types/path";
 import { BaseNodeData } from "@/types/nodes";
 import { ChangeEvent } from "react";
+import lodashSet from "lodash.set";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 
 export type NodeDataState = {
   nodes: Record<string, BaseNodeData>;
@@ -65,7 +68,7 @@ export const useStore = create<NodeDataState>((set, get) => ({
         y: 1,
       },
     },
-    transform_: {
+    transform_1: {
       inputs: [],
       outputs: [],
       data: {
@@ -78,11 +81,10 @@ export const useStore = create<NodeDataState>((set, get) => ({
           ] as Point[],
           attributes: { fill: "#cc3399", stroke: "##ffffff" },
         },
-        translate: [0, 0],
-        rotate: [0, 0, 0],
-        scale: [1, 1],
-        skewX: 0,
-        skewY: 0,
+        translate: { x: 0, y: 0 },
+        rotate: { angle: 0, centerX: 0, centerY: 0 },
+        scale: { x: 1, y: 1 },
+        skew: { x: 0, y: 0 },
       },
     },
   },
@@ -90,36 +92,26 @@ export const useStore = create<NodeDataState>((set, get) => ({
     updateNode(id, data, inputHandle, handle) {
       const node = get().nodes[id];
       const outputs = node.outputs;
-      // 1. update the node's own data
+
       set({
-        nodes: {
-          ...get().nodes,
-          [id]: {
-            ...get().nodes[id],
-            data: {
-              ...get().nodes[id].data,
-              [inputHandle]: data,
-            },
-          },
-        },
+        nodes: produce(get().nodes, (draftState) => {
+          lodashSet(draftState[id].data, inputHandle, data);
+        }),
       });
 
       if (handle) {
         outputs.forEach((outputId) => {
           set({
-            nodes: {
-              ...get().nodes,
-              [outputId]: {
-                ...get().nodes[outputId],
-                data: {
-                  ...get().nodes[outputId].data,
-                  [handle]: data,
-                },
-              },
-            },
+            nodes: produce(get().nodes, (draftState) => {
+              lodashSet(draftState[outputId].data, handle, data);
+            }),
           });
         });
       }
     },
   },
 }));
+
+if (process.env.NODE_ENV === "development") {
+  mountStoreDevtool("NodeData", useStore);
+}

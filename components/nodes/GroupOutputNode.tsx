@@ -9,10 +9,12 @@ function GroupOutputNode({ id }: GroupOutputNode) {
       <div className="bg-gray-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Group Output
       </div>
-      <div className="px-4 py-1 bg-gray-100 text-left max-h-[40px] rounded-b-lg">
-        Shape
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-100 text-left max-h-[40px] rounded-b-lg">
+          Shape
+        </div>
+        <Handle type="target" position={Position.Left} id={id} />
       </div>
-      <Handle type="target" position={Position.Left} id={id} />
     </CustomNodeWrapper>
   );
 }

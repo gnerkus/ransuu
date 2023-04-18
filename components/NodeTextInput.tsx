@@ -11,7 +11,7 @@ export function NodeTextInput({
 }: NodeTextInputProps) {
   return (
     <div className="flex gap-2 hover:bg-gray-300">
-      <p className="pl-4 py-1">{handleId.toUpperCase()}</p>
+      <p className="pl-4 py-1">{handleId}</p>
       <input
         type="number"
         inputMode="numeric"

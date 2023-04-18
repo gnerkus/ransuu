@@ -13,8 +13,13 @@ function VectorNode({ id }: BaseNode) {
       <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
         Vector
       </div>
-      <div className="px-4 py-1 bg-gray-50 text-right max-h-[40px]">Vector</div>
-      <Handle type="source" position={Position.Right} id={id} />
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-right max-h-[40px]">
+          Vector
+        </div>
+        <Handle type="source" position={Position.Right} id={id} />
+      </div>
+
       <div className="bg-gray-50 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
           {Object.keys(nodeValue.data).map((handleId) => (
@@ -22,7 +27,10 @@ function VectorNode({ id }: BaseNode) {
               key={handleId}
               handleId={handleId}
               value={`${nodeValue.data[handleId as "x" | "y"]}`}
-              onChange={handleNodeInput(handleId, nodeValue.data.handle)}
+              onChange={handleNodeInput(
+                handleId,
+                `${nodeValue.handle}.${handleId}`
+              )}
             />
           ))}
         </div>
