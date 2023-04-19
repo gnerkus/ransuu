@@ -14,10 +14,12 @@ export default function SVGOutput({
   height,
   svgOutput,
 }: SVGOutputProps) {
+  const pathProps = svgOutput.path as PathData;
+
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height}>
       <Group>
-        <Path path={svgOutput.path as PathData} />
+        <Path path={pathProps} />
       </Group>
     </svg>
   );

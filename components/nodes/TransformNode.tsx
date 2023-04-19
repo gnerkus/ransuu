@@ -1,14 +1,21 @@
 import { BaseNode } from "@/types/nodes";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useNodeData } from "@/store/nodeDataStore";
 import { NodeTextInput } from "../NodeTextInput";
+import { doSVGTransform } from "@/context/operations";
 
 function TransformNode({ id }: BaseNode) {
-  const { nodeValue, handleNodeInput } = useNodeData(id);
+  const { nodeValue, handleUpdateOutputs, handleNodeInput } = useNodeData(id);
 
-  // TODO: compute path and update output node
+  useEffect(() => {
+    handleUpdateOutputs(
+      id,
+      doSVGTransform(nodeValue.data.path, nodeValue.data),
+      ""
+    );
+  }, [nodeValue, id]);
 
   return (
     <CustomNodeWrapper>
@@ -49,10 +56,7 @@ function TransformNode({ id }: BaseNode) {
                 key={handleId}
                 handleId={handleId}
                 value={`${nodeValue.data["translate"][handleId as "x" | "y"]}`}
-                onChange={handleNodeInput(
-                  `translate.${handleId}`,
-                  nodeValue.data.handle
-                )}
+                onChange={handleNodeInput(`translate.${handleId}`)}
               />
             ))}
           </div>
@@ -76,10 +80,7 @@ function TransformNode({ id }: BaseNode) {
                     handleId as "angele" | "centerX" | "centerY"
                   ]
                 }`}
-                onChange={handleNodeInput(
-                  `rotate.${handleId}`,
-                  nodeValue.data.handle
-                )}
+                onChange={handleNodeInput(`rotate.${handleId}`)}
               />
             ))}
           </div>
@@ -99,10 +100,7 @@ function TransformNode({ id }: BaseNode) {
                 key={handleId}
                 handleId={handleId}
                 value={`${nodeValue.data["scale"][handleId as "x" | "y"]}`}
-                onChange={handleNodeInput(
-                  `scale.${handleId}`,
-                  nodeValue.data.handle
-                )}
+                onChange={handleNodeInput(`scale.${handleId}`)}
               />
             ))}
           </div>
@@ -120,10 +118,7 @@ function TransformNode({ id }: BaseNode) {
                 key={handleId}
                 handleId={handleId}
                 value={`${nodeValue.data["skew"][handleId as "x" | "y"]}`}
-                onChange={handleNodeInput(
-                  `skew.${handleId}`,
-                  nodeValue.data.handle
-                )}
+                onChange={handleNodeInput(`skew.${handleId}`)}
               />
             ))}
           </div>

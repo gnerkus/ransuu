@@ -1,3 +1,4 @@
+import { serializePathAttributes } from "@/context/serializers";
 import { PathData } from "@/types/path";
 import { pointsToPath } from "@/utils/pointsToSVG";
 
@@ -9,8 +10,7 @@ export default function Path({ path }: PathProps) {
   return (
     <path
       d={pointsToPath(path.points)}
-      fill={path.attributes.fill}
-      stroke={path.attributes.stroke}
+      {...serializePathAttributes(path)}
     ></path>
   );
 }

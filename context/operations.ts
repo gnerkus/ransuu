@@ -1,50 +1,30 @@
 import { BaseNodeOperation } from "@/types/nodes";
-import { PathData, Point, Rotation } from "@/types/path";
+import { PathData, TransformArgs } from "@/types/path";
+import { produce } from "immer";
 
-const SVGTransform: BaseNodeOperation = (
+export const doSVGTransform: BaseNodeOperation = (
   path: PathData,
-  handle: string,
-  transformData: Point | Rotation | number
-) => {
-  let transformUpdate: Record<string, number | number[]> = {};
-
-  if (
-    (handle === "translate" || handle === "scale") &&
-    typeof transformData === "object" &&
-    "x" in transformData
-  ) {
-    transformUpdate = {
-      [handle]: [transformData.x, transformData.y],
-    };
-  } else if (
-    (handle === "skewX" || handle == "skewY") &&
-    typeof transformData === "number"
-  ) {
-    transformUpdate = {
-      [handle]: transformData,
-    };
-  } else if (
-    handle === "rotate" &&
-    typeof transformData === "object" &&
-    "angle" in transformData
-  ) {
-    transformUpdate = {
-      [handle]: [
-        transformData.angle,
-        transformData.centerX,
-        transformData.centerY,
-      ],
-    };
-  }
-
-  return {
-    ...path,
-    attributes: {
-      ...path.attributes,
-      transform: {
-        ...path.attributes.transform,
-        ...transformUpdate,
-      },
-    },
+  transformData: TransformArgs
+): PathData => {
+  const transform = {
+    translate: transformData.translate && [
+      transformData.translate.x,
+      transformData.translate.y,
+    ],
+    rotate: transformData.rotate && [
+      transformData.rotate.angle,
+      transformData.rotate.centerX,
+      transformData.rotate.centerY,
+    ],
+    scale: transformData.scale && [
+      transformData.scale.x,
+      transformData.scale.y,
+    ],
+    skewX: transformData.skew && [transformData.skew.x],
+    skewY: transformData.skew && [transformData.skew.y],
   };
+
+  return produce(path, (draft) => {
+    draft.attributes.transform = transform;
+  });
 };

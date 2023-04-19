@@ -1,6 +1,6 @@
 import VectorNode from "@/components/nodes/VectorNode";
-import { Connection, Edge } from "reactflow";
-import { PathData, Point, Transform } from "./path";
+import { Edge } from "reactflow";
+import { PathData, Point } from "./path";
 import { XYPosition } from "reactflow";
 import GroupInputNode from "@/components/nodes/GroupInputNode";
 import GroupOutputNode from "@/components/nodes/GroupOutputNode";
@@ -13,11 +13,7 @@ export const nodeTypes = {
   svg_groupOutputNode: GroupOutputNode,
 };
 
-export type BaseNodeOperation = (
-  path: PathData,
-  handle: string,
-  data: any
-) => PathData;
+export type BaseNodeOperation = (path: PathData, data: any) => PathData;
 
 export type HandleOutputPair = {
   handle: string;

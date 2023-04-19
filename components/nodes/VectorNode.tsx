@@ -1,5 +1,5 @@
 import { BaseNode } from "@/types/nodes";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { useNodeData } from "@/store/nodeDataStore";
@@ -27,10 +27,7 @@ function VectorNode({ id }: BaseNode) {
               key={handleId}
               handleId={handleId}
               value={`${nodeValue.data[handleId as "x" | "y"]}`}
-              onChange={handleNodeInput(
-                handleId,
-                `${nodeValue.handle}.${handleId}`
-              )}
+              onChange={handleNodeInput(handleId)}
             />
           ))}
         </div>

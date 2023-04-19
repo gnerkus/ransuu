@@ -12,12 +12,8 @@ enableMapSet();
 export type NodeDataState = {
   nodes: Record<string, BaseNodeData>;
   actions: {
-    updateNode: (
-      id: string,
-      data: any,
-      inputHandle: string,
-      handle?: string
-    ) => void;
+    updateNode: (id: string, data: any, inputHandle: string) => void;
+    updateNodeOutputs: (id: string, data: any, inputHandle: string) => void;
     addEdge: (connection: Connection) => void;
   };
 };
@@ -26,14 +22,10 @@ export const useNodeData = (nodeId: string) =>
   useStore((store: NodeDataState) => ({
     nodeValue: store.nodes[nodeId],
     handleNodeInput:
-      (inputHandle: string, nodeHandle?: string) =>
-      (evt: ChangeEvent<HTMLInputElement>) =>
-        store.actions.updateNode(
-          nodeId,
-          evt.target.value,
-          inputHandle,
-          nodeHandle
-        ),
+      (inputHandle: string) => (evt: ChangeEvent<HTMLInputElement>) =>
+        store.actions.updateNode(nodeId, evt.target.value, inputHandle),
+    handleUpdateOutputs: (nodeId: string, newData: any, inputHandle: string) =>
+      store.actions.updateNodeOutputs(nodeId, newData, inputHandle),
   }));
 
 export const useStore = create<NodeDataState>((set, get) => ({
@@ -96,22 +88,26 @@ export const useStore = create<NodeDataState>((set, get) => ({
     },
   },
   actions: {
-    updateNode(id, data, inputHandle, handle) {
-      const node = get().nodes[id];
-      const outputs = node.outputs;
-
+    updateNode(id, data, inputHandle) {
       set({
         nodes: produce(get().nodes, (draftState) => {
           lodashSet(draftState[id].data, inputHandle, data);
         }),
       });
 
+      this.updateNodeOutputs(id, data, inputHandle);
+    },
+    updateNodeOutputs(id, data, inputHandle) {
+      const node = get().nodes[id];
+      const outputs = node.outputs;
+
       outputs.forEach((handleOutputPair) => {
+        const withInputHandle = inputHandle ? `.${inputHandle}` : "";
         set({
           nodes: produce(get().nodes, (draftState) => {
             lodashSet(
               draftState[handleOutputPair.id].data,
-              `${handleOutputPair.handle}.${inputHandle}`,
+              `${handleOutputPair.handle}${withInputHandle}`,
               data
             );
           }),
@@ -125,11 +121,6 @@ export const useStore = create<NodeDataState>((set, get) => ({
       ) {
         set({
           nodes: produce(get().nodes, (draftState) => {
-            lodashSet(
-              draftState[connection.source as string],
-              "handle",
-              connection.targetHandle
-            );
             draftState[connection.source as string].outputs.add({
               id: connection.target as string,
               handle: connection.targetHandle as string,
