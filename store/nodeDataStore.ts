@@ -15,18 +15,27 @@ export type NodeDataState = {
     updateNode: (id: string, data: any, inputHandle: string) => void;
     updateNodeOutputs: (id: string, data: any, inputHandle: string) => void;
     addEdge: (connection: Connection) => void;
+    handleNodeInput: (
+      nodeId: string,
+      inputHandle: string
+    ) => (evt: ChangeEvent<HTMLInputElement>) => void;
+    handleUpdateOutputs: (
+      nodeId: string,
+      newData: any,
+      inputHandle: string
+    ) => void;
   };
 };
 
 export const useNodeData = (nodeId: string) =>
   useStore((store: NodeDataState) => ({
     nodeValue: store.nodes[nodeId],
-    handleNodeInput:
-      (inputHandle: string) => (evt: ChangeEvent<HTMLInputElement>) =>
-        store.actions.updateNode(nodeId, evt.target.value, inputHandle),
-    handleUpdateOutputs: (nodeId: string, newData: any, inputHandle: string) =>
-      store.actions.updateNodeOutputs(nodeId, newData, inputHandle),
   }));
+
+export const useHandleNodeInput = () =>
+  useStore((store: NodeDataState) => store.actions.handleNodeInput);
+export const useHandleUpdateOutputs = () =>
+  useStore((store: NodeDataState) => store.actions.handleUpdateOutputs);
 
 export const useStore = create<NodeDataState>((set, get) => ({
   nodes: {
@@ -129,6 +138,11 @@ export const useStore = create<NodeDataState>((set, get) => ({
         });
       }
     },
+    handleNodeInput:
+      (nodeId, inputHandle) => (evt: ChangeEvent<HTMLInputElement>) =>
+        get().actions.updateNode(nodeId, evt.target.value, inputHandle),
+    handleUpdateOutputs: (nodeId: string, newData: any, inputHandle: string) =>
+      get().actions.updateNodeOutputs(nodeId, newData, inputHandle),
   },
 }));
 
