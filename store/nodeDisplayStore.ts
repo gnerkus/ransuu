@@ -8,6 +8,7 @@ import {
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { BaseEdge, BaseNode } from "@/types/nodes";
+import { addNode } from "@/context/SVGContext";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
