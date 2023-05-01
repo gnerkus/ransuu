@@ -4,16 +4,14 @@ import { GraphNode } from "./SVGContext";
 abstract class BaseNode<AttrType> implements GraphNode {
   readonly id: string;
   readonly nodeType: string;
-  readonly attrs: AttrType;
-  observableAttrs: Observable;
+  observableAttrs: Observable & AttrType;
   readonly inputs: Map<Observable, string>;
 
   constructor(nodeId: string, nodeType: string, attrs: AttrType) {
     this.id = nodeId;
     this.nodeType = nodeType;
     this.inputs = new Map();
-    this.attrs = attrs;
-    this.observableAttrs = Observable.from(this.attrs);
+    this.observableAttrs = Observable.from<AttrType>(attrs);
   }
 
   /**
