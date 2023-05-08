@@ -2,12 +2,15 @@ import { BaseNode } from "@/types/nodes";
 import React, { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
-import { useHandleNodeInput, useNodeData } from "@/store/nodeDataStore";
 import { NodeTextInput } from "../NodeTextInput";
+import { Point } from "@/types/path";
+import { useHandleNodeInput } from "@/store/nodeDisplayStore";
 
-function VectorNode({ id }: BaseNode) {
-  const { nodeValue } = useNodeData(id);
+function VectorNode({ id, data }: BaseNode) {
   const handleNodeInput = useHandleNodeInput();
+
+  const dataHandle = "vector";
+  const nodeData = data[dataHandle] as Point;
 
   return (
     <CustomNodeWrapper>
@@ -23,12 +26,12 @@ function VectorNode({ id }: BaseNode) {
 
       <div className="bg-gray-50 p-4 rounded-b-lg">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-          {Object.keys(nodeValue.data).map((handleId) => (
+          {Object.keys(nodeData).map((handleId) => (
             <NodeTextInput
               key={handleId}
               handleId={handleId}
-              value={`${nodeValue.data[handleId as "x" | "y"]}`}
-              onChange={handleNodeInput(id, handleId)}
+              value={`${nodeData[handleId as "x" | "y"]}`}
+              onChange={handleNodeInput(id, dataHandle, handleId)}
             />
           ))}
         </div>
