@@ -36,6 +36,7 @@ export type BaseNode = {
   id: string;
   type?: string;
   position: XYPosition;
+  externalnputs?: Record<string, boolean>;
   data: BaseNodeDataType;
 };
 

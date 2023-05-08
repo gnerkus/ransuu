@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 
 type CustomNodeWrapperProps = {
-  children: ReactElement | ReactElement[];
+  children: ReactNode | ReactNode[];
 };
 
 function CustomNodeWrapper({ children }: CustomNodeWrapperProps) {

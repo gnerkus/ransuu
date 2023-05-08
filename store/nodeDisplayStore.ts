@@ -185,5 +185,15 @@ export const useStore = create<FlowState>((set, get) => ({
     };
 
     set({ edges: [edge, ...get().edges] });
+    if (data.targetHandle) {
+      const handle = data.targetHandle;
+      set({
+        nodes: get().nodes.map((node) =>
+          node.id === data.target
+            ? { ...node, externalnputs: { [handle]: true } }
+            : node
+        ),
+      });
+    }
   },
 }));
