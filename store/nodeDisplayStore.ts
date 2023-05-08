@@ -29,7 +29,17 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 100,
         y: 100,
       },
-      data: {},
+      data: {
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
+      },
     },
     {
       id: "output",
@@ -38,7 +48,17 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 500,
         y: 100,
       },
-      data: {},
+      data: {
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
+      },
     },
     {
       id: "vector_1",
@@ -47,7 +67,12 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 300,
         y: 200,
       },
-      data: {},
+      data: {
+        vector: {
+          x: 1,
+          y: 1,
+        },
+      },
     },
     {
       id: "transform_1",
@@ -56,7 +81,21 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 500,
         y: 200,
       },
-      data: {},
+      data: {
+        path: {
+          points: [
+            { x: 32, y: 32 },
+            { x: 128, y: 32 },
+            { x: 128, y: 128 },
+            { x: 32, y: 128 },
+          ],
+          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+        },
+        translate: { x: 0, y: 0 },
+        rotate: { angle: 0, centerX: 0, centerY: 0 },
+        scale: { x: 1, y: 1 },
+        skew: { x: 0, y: 0 },
+      },
     },
   ],
   edges: [

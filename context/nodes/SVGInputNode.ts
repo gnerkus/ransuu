@@ -1,8 +1,12 @@
 import { Change } from "@gullerya/object-observer";
 import BaseNode from "../BaseNode";
-import { Point } from "@/types/path";
+import * as d3 from "d3";
 
-class SVGVectorNode extends BaseNode<Point> {
+type InputNodeAttrs = {
+  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
+};
+
+class SVGInputNode extends BaseNode<InputNodeAttrs> {
   /**
    * TODO: source nodes do not need to implement onChange
    * @param changes
@@ -10,4 +14,4 @@ class SVGVectorNode extends BaseNode<Point> {
   onChange(changes: Change[]) {}
 }
 
-export default SVGVectorNode;
+export default SVGInputNode;
