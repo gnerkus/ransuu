@@ -1,5 +1,4 @@
 import SVGVectorNode from "./nodes/SVGVectorNode";
-import { nanoid } from "nanoid";
 import SVGTransformNode from "./nodes/SVGTransformNode";
 import * as d3 from "d3";
 import SVGInputNode from "./nodes/SVGInputNode";
@@ -7,6 +6,7 @@ import SVGOutputNode from "./nodes/SVGOutputNode";
 import lodashSet from "lodash.set";
 import BaseNode from "./BaseNode";
 
+export type Shape = d3.Selection<SVGGElement, undefined, null, undefined>;
 export type ShapeOutput = {
   shape: d3.Selection<SVGGElement, undefined, null, undefined>;
 };
@@ -18,7 +18,7 @@ class SVGContext {
     this.nodes = new Map();
   }
 
-  add<Input, Output>(node: BaseNode<Input, Output>) {
+  add<Input extends object, Output>(node: BaseNode<Input, Output>) {
     this.nodes.set(node.id, node);
   }
 
@@ -29,18 +29,38 @@ class SVGContext {
 
     lodashSet(node.attrs, attr, value);
 
-    // TODO: update all nodes in the tree connected to this node
+    /**
+     * 1. place the updated node in an array
+     * 2. for each item in the array, run a reduce
+     */
+    let workNodes: BaseNode<any, any>[] = [node];
+
+    while (workNodes.length) {
+      workNodes = workNodes.reduce((acc, item) => {
+        const outputs = item.outputs.reduce((foundOutputs, outputPair) => {
+          const outputNode = this.nodes.get(outputPair[0]);
+          if (!outputNode) return foundOutputs;
+
+          outputNode.setAttrs(outputPair[1], item.calculateOutput());
+
+          return [...foundOutputs, outputNode];
+        }, [] as BaseNode<any, any>[]);
+        return [...acc, ...outputs];
+      }, [] as BaseNode<any, any>[]);
+    }
   }
 
   getOutputSVG(): string {
-    /**
-     * TODO:
-     * 1. get all output nodes (all nodes of type svg_groupOutputNode)
-     * 2. export their svg <g> string
-     * 3. group the results into a <g> and return
-     */
+    const groupOutputs = Array.from(this.nodes.values())
+      .filter((svgNode) => {
+        return svgNode.nodeType === "svg_groupOutputNode";
+      })
+      .map((outputNode) => {
+        return outputNode.calculateOutput();
+      })
+      .join("");
 
-    return "";
+    return `<g>${groupOutputs}</g>`;
   }
 }
 
@@ -76,14 +96,12 @@ export function createDefaultNodes(
   });
   context.add(transform);
 
-  context.outputId = outputID;
-
-  input.connect(transform, "shape");
-  vector.connect(transform, "translate");
-  transform.connect(output, "shape");
+  input.connect(transform.id, "shape");
+  vector.connect(transform.id, "translate");
+  transform.connect(output.id, "shape");
 }
 
-export function addNode(node: GraphNode) {
+export function addNode(node: BaseNode<any, any>) {
   context.add(node);
 }
 

@@ -1,9 +1,9 @@
 import BaseNode from "../BaseNode";
-import { ShapeOutput } from "../SVGContext";
+import { Shape, ShapeOutput } from "../SVGContext";
 
-class SVGInputNode extends BaseNode<ShapeOutput, ShapeOutput> {
-  calculateOutput(): ShapeOutput {
-    return this.attrs;
+class SVGInputNode extends BaseNode<ShapeOutput, Shape> {
+  calculateOutput(): Shape {
+    return this.attrs.shape;
   }
 }
 

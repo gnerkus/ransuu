@@ -1,6 +1,8 @@
+import lodashSet from "lodash.set";
+
 type ConnectionPair = [string, string];
 
-abstract class BaseNode<InputType, OutputType> {
+abstract class BaseNode<InputType extends object, OutputType> {
   readonly id: string;
   readonly nodeType: string;
   outputs: ConnectionPair[] = [];
@@ -12,8 +14,8 @@ abstract class BaseNode<InputType, OutputType> {
     this.attrs = attrs;
   }
 
-  setAttrs(newAttrs: InputType): void {
-    this.attrs = newAttrs;
+  setAttrs(attrPath: string, newAttrs: InputType): void {
+    lodashSet(this.attrs, attrPath, newAttrs);
   }
 
   /**

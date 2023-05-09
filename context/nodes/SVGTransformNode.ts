@@ -1,6 +1,6 @@
 import BaseNode from "../BaseNode";
 import { Point, Rotation } from "@/types/path";
-import { ShapeOutput } from "../SVGContext";
+import { Shape, ShapeOutput } from "../SVGContext";
 
 type TransformNodeAttrs = ShapeOutput & {
   translate: Point;
@@ -27,11 +27,11 @@ const serializeTransform = (attrs: TransformNodeAttrs): string => {
   ].join(" ");
 };
 
-class SVGTransformNode extends BaseNode<TransformNodeAttrs, ShapeOutput> {
-  calculateOutput(): ShapeOutput {
+class SVGTransformNode extends BaseNode<TransformNodeAttrs, Shape> {
+  calculateOutput(): Shape {
     const updatedTransform = serializeTransform(this.attrs);
 
-    return { shape: this.attrs.shape.attr("transform", updatedTransform) };
+    return this.attrs.shape.attr("transform", updatedTransform);
   }
 }
 
