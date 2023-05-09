@@ -1,20 +1,10 @@
-import { Change } from "@gullerya/object-observer";
 import BaseNode from "../BaseNode";
-import * as d3 from "d3";
+import { ShapeOutput } from "../SVGContext";
 
-type InputNodeAttrs = {
-  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
-};
-
-class SVGInputNode extends BaseNode<InputNodeAttrs> {
-  constructor(nodeId: string, nodeType: string, attrs: InputNodeAttrs) {
-    super(nodeId, nodeType, attrs);
+class SVGInputNode extends BaseNode<ShapeOutput, ShapeOutput> {
+  calculateOutput(): ShapeOutput {
+    return this.attrs;
   }
-  /**
-   * TODO: source nodes do not need to implement onChange
-   * @param changes
-   */
-  onChange(changes: Change[]) {}
 }
 
 export default SVGInputNode;

@@ -1,15 +1,9 @@
-import { Change } from "@gullerya/object-observer";
 import BaseNode from "../BaseNode";
+import { ShapeOutput } from "../SVGContext";
 
-type OutputNodeAttrs = {
-  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
-};
-
-class SVGOutputNode extends BaseNode<OutputNodeAttrs> {
-  onChange(changes: Change[]): void {
-    changes.forEach((change) => {
-      this.observableAttrs.shape = change.value;
-    });
+class SVGOutputNode extends BaseNode<ShapeOutput, string> {
+  calculateOutput(): string {
+    return this.attrs.shape.html();
   }
 }
 

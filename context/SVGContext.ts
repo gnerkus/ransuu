@@ -1,4 +1,3 @@
-import { Observable, Observer } from "@gullerya/object-observer";
 import SVGVectorNode from "./nodes/SVGVectorNode";
 import { nanoid } from "nanoid";
 import SVGTransformNode from "./nodes/SVGTransformNode";
@@ -6,42 +5,42 @@ import * as d3 from "d3";
 import SVGInputNode from "./nodes/SVGInputNode";
 import SVGOutputNode from "./nodes/SVGOutputNode";
 import lodashSet from "lodash.set";
+import BaseNode from "./BaseNode";
 
-export interface GraphNode {
-  readonly id: string;
-  readonly nodeType: string;
-  observableAttrs: Observable;
-  readonly inputs: Map<Observable, string>; // map of handleId, GraphNode
-  connect(destination: GraphNode, handleId: string): void;
-  onConnect(source: GraphNode, handleId: string): void;
-  onChange: Observer;
-}
+export type ShapeOutput = {
+  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
+};
 
 class SVGContext {
-  readonly nodes: Map<string, GraphNode>;
-  outputId: string = "";
+  readonly nodes: Map<string, BaseNode<any, any>>;
 
   constructor() {
     this.nodes = new Map();
   }
 
-  add(node: GraphNode) {
+  add<Input, Output>(node: BaseNode<Input, Output>) {
     this.nodes.set(node.id, node);
   }
 
-  update(id: string, attr: string, value: any) {
+  update<InputType>(id: string, attr: string, value: InputType) {
     const node = this.nodes.get(id);
     // TODO: throw an error here about the id being invalid
     if (!node) return;
 
-    lodashSet(node.observableAttrs, attr, value);
+    lodashSet(node.attrs, attr, value);
+
+    // TODO: update all nodes in the tree connected to this node
   }
 
   getOutputSVG(): string {
-    const outputNode = this.nodes.get(this.outputId) as SVGOutputNode;
-    if (!outputNode) return "";
+    /**
+     * TODO:
+     * 1. get all output nodes (all nodes of type svg_groupOutputNode)
+     * 2. export their svg <g> string
+     * 3. group the results into a <g> and return
+     */
 
-    return outputNode.observableAttrs.shape.html();
+    return "";
   }
 }
 

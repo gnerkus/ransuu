@@ -1,11 +1,8 @@
-import { Change, Observable } from "@gullerya/object-observer";
-import * as d3 from "d3";
 import BaseNode from "../BaseNode";
 import { Point, Rotation } from "@/types/path";
-import lodashSet from "lodash.set";
+import { ShapeOutput } from "../SVGContext";
 
-type TransformNodeAttrs = {
-  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
+type TransformNodeAttrs = ShapeOutput & {
   translate: Point;
   rotate: Rotation;
   scale: Point;
@@ -20,16 +17,7 @@ const serializeRotation = (handle: string, rotation: Rotation): string => {
   return `${handle}(${rotation.angle} ${rotation.centerX} ${rotation.centerY})`;
 };
 
-const serializeTransform = (
-  handle: string,
-  attrPath: string[],
-  newValue: any,
-  currentAttrs: Observable & TransformNodeAttrs
-): string => {
-  let { shape, ...attrs } = currentAttrs;
-
-  attrs = lodashSet(attrs, [handle, ...attrPath].join("."), newValue);
-
+const serializeTransform = (attrs: TransformNodeAttrs): string => {
   return [
     serializeVector("translate", attrs.translate),
     serializeRotation("rotate", attrs.rotate),
@@ -39,31 +27,11 @@ const serializeTransform = (
   ].join(" ");
 };
 
-class SVGTransformNode extends BaseNode<TransformNodeAttrs> {
-  /**
-   * React to changes from source nodes
-   *
-   * @param changes from the input nodes connected to translate, scale, rotate and skew
-   */
-  onChange(changes: Change[]) {
-    changes.forEach((change) => {
-      const inputHandle = this.inputs.get(
-        change.object
-      ) as keyof TransformNodeAttrs;
+class SVGTransformNode extends BaseNode<TransformNodeAttrs, ShapeOutput> {
+  calculateOutput(): ShapeOutput {
+    const updatedTransform = serializeTransform(this.attrs);
 
-      const updatedTransform = serializeTransform(
-        inputHandle,
-        change.path,
-        change.value,
-        this.observableAttrs
-      );
-
-      // TODO: see if we can simply update the shape instead of assigning a new shape
-      this.observableAttrs.shape = this.observableAttrs.shape.attr(
-        "transform",
-        updatedTransform
-      );
-    });
+    return { shape: this.attrs.shape.attr("transform", updatedTransform) };
   }
 }
 
