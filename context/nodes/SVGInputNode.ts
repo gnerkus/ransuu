@@ -7,6 +7,9 @@ type InputNodeAttrs = {
 };
 
 class SVGInputNode extends BaseNode<InputNodeAttrs> {
+  constructor(nodeId: string, nodeType: string, attrs: InputNodeAttrs) {
+    super(nodeId, nodeType, attrs);
+  }
   /**
    * TODO: source nodes do not need to implement onChange
    * @param changes

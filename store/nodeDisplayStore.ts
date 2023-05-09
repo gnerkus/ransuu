@@ -9,7 +9,6 @@ import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { BaseEdge, BaseNode } from "@/types/nodes";
 import {
-  addNode,
   createDefaultNodes,
   updateNode,
   getOutput,
@@ -44,10 +43,12 @@ const outputNodeId = nanoid(6);
 const vectorNodeId = nanoid(6);
 const transformNodeId = nanoid(6);
 
-createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
-
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
+
+export const createContextNodes = () => {
+  createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
+};
 
 export const useStore = create<FlowState>((set, get) => ({
   output: getOutput(),

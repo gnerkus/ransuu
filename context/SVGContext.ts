@@ -48,30 +48,6 @@ class SVGContext {
 const context = new SVGContext();
 
 /**
- * default nodes
- *
- */
-const svgGroup = d3.create("g");
-const input = new SVGInputNode(nanoid(6), "input", { shape: svgGroup });
-context.add(input);
-const output = new SVGOutputNode(nanoid(6), "output", { shape: svgGroup });
-context.add(output);
-const vector = new SVGVectorNode(nanoid(6), "svg_vectorNode", { x: 1, y: 1 });
-context.add(vector);
-const transform = new SVGTransformNode(nanoid(6), "svg_transformNode", {
-  shape: svgGroup,
-  translate: { x: 0, y: 0 },
-  rotate: { angle: 0, centerX: 0, centerY: 0 },
-  scale: { x: 1, y: 1 },
-  skew: { x: 0, y: 0 },
-});
-context.add(transform);
-
-input.connect(transform, "shape");
-vector.connect(transform, "translate");
-transform.connect(output, "shape");
-
-/**
  * TODO: limit this to just the input and output nodes once the add node functionality has been implemented
  * @param nodeIds
  */
@@ -82,10 +58,10 @@ export function createDefaultNodes(
   transformID: string
 ) {
   const svgGroup = d3.create("g");
+
   const input = new SVGInputNode(inputID, "svg_groupInputNode", {
     shape: svgGroup,
   });
-  context.add(input);
   const output = new SVGOutputNode(outputID, "svg_groupOutputNode", {
     shape: svgGroup,
   });

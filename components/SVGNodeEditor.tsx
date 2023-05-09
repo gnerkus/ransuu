@@ -9,7 +9,11 @@ import ReactFlow, {
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
-import { FlowState, useStore } from "@/store/nodeDisplayStore";
+import {
+  FlowState,
+  createContextNodes,
+  useStore,
+} from "@/store/nodeDisplayStore";
 import {
   NodeDataState,
   useStore as useNodeDataStore,
@@ -17,6 +21,7 @@ import {
 
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";
+import { useRef, useEffect } from "react";
 
 // we no longer read from ReactFlow's own store; we read from our own store
 const selector = (store: FlowState) => ({
@@ -39,6 +44,13 @@ type CustomAddEgde = (
 export default function SVGNodeEditor() {
   const store = useStore(selector, shallow);
   const { output, addDataEdge } = useNodeDataStore(dataSelector, shallow);
+  const loadRef = useRef(null);
+
+  useEffect(() => {
+    if (loadRef.current) {
+      createContextNodes();
+    }
+  }, []);
 
   const customAddEgde: CustomAddEgde =
     (callback) => (connection: Connection) => {
@@ -48,7 +60,7 @@ export default function SVGNodeEditor() {
 
   return (
     <ReactFlowProvider>
-      <div style={{ width: "100vw", height: "100vh" }}>
+      <div style={{ width: "100vw", height: "100vh" }} ref={loadRef}>
         <ReactFlow
           nodes={store.nodes}
           edges={store.edges}
