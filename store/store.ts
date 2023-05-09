@@ -16,11 +16,12 @@ import {
 } from "@/context/SVGContext";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
+import { PathData } from "@/types/path";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 export type FlowState = {
-  output: string;
+  output: PathData[];
   nodes: BaseNode[];
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
@@ -65,7 +66,6 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        // TODO: remove the redundant 'path' field
         path: {
           points: [
             { x: 32, y: 32 },
@@ -73,7 +73,7 @@ export const useStore = create<FlowState>((set, get) => ({
             { x: 128, y: 128 },
             { x: 32, y: 128 },
           ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+          attributes: { fill: "#cc3399", stroke: "#ffffff" },
         },
       },
     },
@@ -85,7 +85,6 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        // TODO: remove the redundant 'path' field
         path: {
           points: [
             { x: 32, y: 32 },
@@ -93,7 +92,7 @@ export const useStore = create<FlowState>((set, get) => ({
             { x: 128, y: 128 },
             { x: 32, y: 128 },
           ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+          attributes: { fill: "#cc3399", stroke: "#ffffff" },
         },
       },
     },
@@ -119,7 +118,6 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        // TODO: remove the redundant 'path' field
         path: {
           points: [
             { x: 32, y: 32 },
@@ -127,7 +125,7 @@ export const useStore = create<FlowState>((set, get) => ({
             { x: 128, y: 128 },
             { x: 32, y: 128 },
           ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+          attributes: { fill: "#cc3399", stroke: "#ffffff" },
         },
         translate: { x: 0, y: 0 },
         rotate: { angle: 0, centerX: 0, centerY: 0 },

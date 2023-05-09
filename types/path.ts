@@ -9,11 +9,11 @@ export type Rotation = {
   centerY: number;
 };
 
-export type TransformArgs = {
-  translate?: Point;
-  rotate?: Rotation;
-  skew?: Point;
-  scale?: Point;
+export type TransformData = {
+  translate: Point;
+  rotate: Rotation;
+  skew: Point;
+  scale: Point;
 };
 
 export type PathData = {
@@ -21,12 +21,8 @@ export type PathData = {
   attributes: PathAttributes;
 };
 
-export type TransformData = {
-  translate?: number[];
-  rotate?: number[];
-  scale?: number[];
-  skewX?: number[];
-  skewY?: number[];
+export type PathInput = {
+  path: PathData;
 };
 
 export type PathAttributes = {

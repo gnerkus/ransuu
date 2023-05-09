@@ -5,7 +5,6 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   ReactFlowProvider,
-  Connection,
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";

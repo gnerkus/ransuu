@@ -1,37 +1,18 @@
 import BaseNode from "../BaseNode";
-import { Point, Rotation } from "@/types/path";
-import { Shape, ShapeOutput } from "../SVGContext";
+import { PathData, PathInput, TransformData } from "@/types/path";
 
-type TransformNodeAttrs = ShapeOutput & {
-  translate: Point;
-  rotate: Rotation;
-  scale: Point;
-  skew: Point;
-};
+type TransformNodeAttrs = PathInput & TransformData;
 
-const serializeVector = (handle: string, vector: Point): string => {
-  return `${handle}(${vector.x} ${vector.y})`;
-};
+class SVGTransformNode extends BaseNode<TransformNodeAttrs, PathData> {
+  calculateOutput(): PathData {
+    this.attrs.path.attributes.transform = {
+      translate: this.attrs.translate,
+      scale: this.attrs.scale,
+      rotate: this.attrs.rotate,
+      skew: this.attrs.skew,
+    };
 
-const serializeRotation = (handle: string, rotation: Rotation): string => {
-  return `${handle}(${rotation.angle} ${rotation.centerX} ${rotation.centerY})`;
-};
-
-const serializeTransform = (attrs: TransformNodeAttrs): string => {
-  return [
-    serializeVector("translate", attrs.translate),
-    serializeRotation("rotate", attrs.rotate),
-    serializeVector("scale", attrs.scale),
-    `skewX(${attrs.skew.x})`,
-    `skewY(${attrs.skew.y})`,
-  ].join(" ");
-};
-
-class SVGTransformNode extends BaseNode<TransformNodeAttrs, Shape> {
-  calculateOutput(): Shape {
-    const updatedTransform = serializeTransform(this.attrs);
-
-    return this.attrs.shape.attr("transform", updatedTransform);
+    return this.attrs.path;
   }
 }
 

@@ -1,15 +1,10 @@
 import SVGVectorNode from "./nodes/SVGVectorNode";
 import SVGTransformNode from "./nodes/SVGTransformNode";
-import * as d3 from "d3";
 import SVGInputNode from "./nodes/SVGInputNode";
 import SVGOutputNode from "./nodes/SVGOutputNode";
 import lodashSet from "lodash.set";
 import BaseNode from "./BaseNode";
-
-export type Shape = d3.Selection<SVGGElement, undefined, null, undefined>;
-export type ShapeOutput = {
-  shape: d3.Selection<SVGGElement, undefined, null, undefined>;
-};
+import { PathData } from "@/types/path";
 
 class SVGContext {
   readonly nodes: Map<string, BaseNode<any, any>>;
@@ -59,17 +54,16 @@ class SVGContext {
     }
   }
 
-  getOutputSVG(): string {
+  getOutputSVG(): PathData[] {
     const groupOutputs = Array.from(this.nodes.values())
       .filter((svgNode) => {
         return svgNode.nodeType === "svg_groupOutputNode";
       })
       .map((outputNode) => {
-        return outputNode.calculateOutput();
-      })
-      .join("");
+        return outputNode.calculateOutput() as PathData;
+      });
 
-    return `<g>${groupOutputs}</g>`;
+    return groupOutputs;
   }
 }
 
@@ -85,22 +79,40 @@ export function createDefaultNodes(
   vectorID: string,
   transformID: string
 ) {
-  const svgGroup = d3.create("g");
-  svgGroup.attr("fill", "#cc3399").attr("stroke", "#ffffff");
-  svgGroup.append("path").attr("d", "M120,0h100v100h-100Z").attr("rx", "15");
-
   const input = new SVGInputNode(inputID, "svg_groupInputNode", {
-    shape: svgGroup,
+    points: [
+      { x: 32, y: 32 },
+      { x: 128, y: 32 },
+      { x: 128, y: 128 },
+      { x: 32, y: 128 },
+    ],
+    attributes: { fill: "#cc3399", stroke: "#ffffff" },
   });
   context.add(input);
   const output = new SVGOutputNode(outputID, "svg_groupOutputNode", {
-    shape: svgGroup,
+    path: {
+      points: [
+        { x: 32, y: 32 },
+        { x: 128, y: 32 },
+        { x: 128, y: 128 },
+        { x: 32, y: 128 },
+      ],
+      attributes: { fill: "#cc3399", stroke: "#ffffff" },
+    },
   });
   context.add(output);
   const vector = new SVGVectorNode(vectorID, "svg_vectorNode", { x: 1, y: 1 });
   context.add(vector);
   const transform = new SVGTransformNode(transformID, "svg_transformNode", {
-    shape: svgGroup,
+    path: {
+      points: [
+        { x: 32, y: 32 },
+        { x: 128, y: 32 },
+        { x: 128, y: 128 },
+        { x: 32, y: 128 },
+      ],
+      attributes: { fill: "#cc3399", stroke: "#ffffff" },
+    },
     translate: { x: 0, y: 0 },
     rotate: { angle: 0, centerX: 0, centerY: 0 },
     scale: { x: 1, y: 1 },
@@ -119,7 +131,7 @@ export function updateContextNode(id: string, attr: string, value: any) {
   context.update(id, attr, value);
 }
 
-export function getOutput(): string {
+export function getOutput(): PathData[] {
   return context.getOutputSVG();
 }
 
