@@ -45,12 +45,10 @@ const outputNodeId = nanoid(6);
 const vectorNodeId = nanoid(6);
 const transformNodeId = nanoid(6);
 
+createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
+
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
-
-export const createContextNodes = () => {
-  createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
-};
 
 export const useGraphOutput = () =>
   useStore((store: FlowState) => store.output);
@@ -66,15 +64,13 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        path: {
-          points: [
-            { x: 32, y: 32 },
-            { x: 128, y: 32 },
-            { x: 128, y: 128 },
-            { x: 32, y: 128 },
-          ],
-          attributes: { fill: "#cc3399", stroke: "#ffffff" },
-        },
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ],
+        attributes: { fill: "#cc3399", stroke: "#ffffff" },
       },
     },
     {
@@ -85,15 +81,13 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        path: {
-          points: [
-            { x: 32, y: 32 },
-            { x: 128, y: 32 },
-            { x: 128, y: 128 },
-            { x: 32, y: 128 },
-          ],
-          attributes: { fill: "#cc3399", stroke: "#ffffff" },
-        },
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ],
+        attributes: { fill: "#cc3399", stroke: "#ffffff" },
       },
     },
     {
@@ -104,10 +98,8 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        vector: {
-          x: 1,
-          y: 1,
-        },
+        x: 1,
+        y: 1,
       },
     },
     {
@@ -163,7 +155,11 @@ export const useStore = create<FlowState>((set, get) => ({
         node.id === id
           ? {
               ...node,
-              data: lodashSet(node.data, `${dataHandle}.${fieldPath}`, data),
+              data: lodashSet(
+                node.data,
+                [dataHandle, fieldPath].filter(Boolean).join("."),
+                data
+              ),
             }
           : node
       ),

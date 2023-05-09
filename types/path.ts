@@ -30,3 +30,5 @@ export type PathAttributes = {
   stroke: string;
   transform?: TransformData;
 };
+
+export type TransformNodeAttrs = PathInput & TransformData;

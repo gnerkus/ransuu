@@ -1,7 +1,5 @@
 import BaseNode from "../BaseNode";
-import { PathData, PathInput, TransformData } from "@/types/path";
-
-type TransformNodeAttrs = PathInput & TransformData;
+import { PathData, TransformNodeAttrs } from "@/types/path";
 
 class SVGTransformNode extends BaseNode<TransformNodeAttrs, PathData> {
   calculateOutput(): PathData {

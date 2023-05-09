@@ -8,11 +8,10 @@ import ReactFlow, {
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
-import { FlowState, createContextNodes, useStore } from "@/store/store";
+import { FlowState, useStore } from "@/store/store";
 
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";
-import { useRef, useEffect } from "react";
 
 const selector = (store: FlowState) => ({
   nodes: store.nodes,
@@ -24,17 +23,10 @@ const selector = (store: FlowState) => ({
 
 export default function SVGNodeEditor() {
   const store = useStore(selector, shallow);
-  const loadRef = useRef(null);
-
-  useEffect(() => {
-    if (loadRef.current) {
-      createContextNodes();
-    }
-  }, []);
 
   return (
     <ReactFlowProvider>
-      <div style={{ width: "100vw", height: "100vh" }} ref={loadRef}>
+      <div style={{ width: "100vw", height: "100vh" }}>
         <ReactFlow
           nodes={store.nodes}
           edges={store.edges}

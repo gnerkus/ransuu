@@ -8,9 +8,7 @@ import { useHandleNodeInput } from "@/store/store";
 
 function VectorNode({ id, data }: BaseNode) {
   const handleNodeInput = useHandleNodeInput();
-
-  const dataHandle = "vector";
-  const nodeData = data[dataHandle] as Point;
+  const nodeData = data as Point;
 
   return (
     <CustomNodeWrapper>
@@ -31,7 +29,7 @@ function VectorNode({ id, data }: BaseNode) {
               key={handleId}
               handleId={handleId}
               value={`${nodeData[handleId as "x" | "y"]}`}
-              onChange={handleNodeInput(id, dataHandle, handleId)}
+              onChange={handleNodeInput(id, "", handleId)}
             />
           ))}
         </div>
