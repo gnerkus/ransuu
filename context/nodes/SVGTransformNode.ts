@@ -1,39 +1,37 @@
-import { Change } from "@gullerya/object-observer";
-import * as d3 from "d3";
 import BaseNode from "../BaseNode";
 import { Point, Rotation } from "@/types/path";
-import lodashSet from "lodash.set";
+import { Shape, ShapeOutput } from "../SVGContext";
 
-type TransformNodeAttrs = {
-  shape: d3.Selection<SVGElement, undefined, null, undefined>;
+type TransformNodeAttrs = ShapeOutput & {
   translate: Point;
   rotate: Rotation;
   scale: Point;
-  skew: Rotation;
+  skew: Point;
 };
 
-class SVGTransformNode extends BaseNode<TransformNodeAttrs> {
-  /**
-   *
-   * @param changes from the input nodes connected to translate, scale, rotate and skew
-   */
-  onChange(changes: Change[]) {
-    changes.forEach((change) => {
-      const inputObject = change.object;
-      const attrPath = change.path;
-      const newValue = change.value;
-      const inputHandle = this.inputs.get(
-        inputObject
-      ) as keyof TransformNodeAttrs;
+const serializeVector = (handle: string, vector: Point): string => {
+  return `${handle}(${vector.x} ${vector.y})`;
+};
 
-      if (inputHandle && inputHandle !== "shape") {
-        lodashSet(
-          this.observableAttrs,
-          [inputHandle, ...attrPath].join("."),
-          newValue
-        );
-      }
-    });
+const serializeRotation = (handle: string, rotation: Rotation): string => {
+  return `${handle}(${rotation.angle} ${rotation.centerX} ${rotation.centerY})`;
+};
+
+const serializeTransform = (attrs: TransformNodeAttrs): string => {
+  return [
+    serializeVector("translate", attrs.translate),
+    serializeRotation("rotate", attrs.rotate),
+    serializeVector("scale", attrs.scale),
+    `skewX(${attrs.skew.x})`,
+    `skewY(${attrs.skew.y})`,
+  ].join(" ");
+};
+
+class SVGTransformNode extends BaseNode<TransformNodeAttrs, Shape> {
+  calculateOutput(): Shape {
+    const updatedTransform = serializeTransform(this.attrs);
+
+    return this.attrs.shape.attr("transform", updatedTransform);
   }
 }
 

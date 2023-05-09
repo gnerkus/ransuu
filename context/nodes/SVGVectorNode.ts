@@ -1,17 +1,10 @@
-import { Change } from "@gullerya/object-observer";
 import BaseNode from "../BaseNode";
+import { Point } from "@/types/path";
 
-type VectorNodeAttrs = {
-  x: number;
-  y: number;
-};
-
-class SVGVectorNode extends BaseNode<VectorNodeAttrs> {
-  /**
-   * TODO: source nodes do not need to implement onChange
-   * @param changes
-   */
-  onChange(changes: Change[]) {}
+class SVGVectorNode extends BaseNode<Point, Point> {
+  calculateOutput(): Point {
+    return this.attrs;
+  }
 }
 
 export default SVGVectorNode;
