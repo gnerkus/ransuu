@@ -18,6 +18,15 @@ class SVGContext {
     this.nodes = new Map();
   }
 
+  connect(sourceId: string, targetId: string, targetHandle: string) {
+    const source = this.nodes.get(sourceId);
+    if (!source) return;
+    const target = this.nodes.get(targetId);
+    if (!target) return;
+
+    source.connect(target.id, targetHandle);
+  }
+
   add<Input extends object, Output>(node: BaseNode<Input, Output>) {
     this.nodes.set(node.id, node);
   }
@@ -81,6 +90,7 @@ export function createDefaultNodes(
   const input = new SVGInputNode(inputID, "svg_groupInputNode", {
     shape: svgGroup,
   });
+  context.add(input);
   const output = new SVGOutputNode(outputID, "svg_groupOutputNode", {
     shape: svgGroup,
   });
@@ -96,9 +106,7 @@ export function createDefaultNodes(
   });
   context.add(transform);
 
-  input.connect(transform.id, "shape");
-  vector.connect(transform.id, "translate");
-  transform.connect(output.id, "shape");
+  input.connect(output.id, "shape");
 }
 
 export function addNode(node: BaseNode<any, any>) {
@@ -111,4 +119,12 @@ export function updateNode(id: string, attr: string, value: any) {
 
 export function getOutput(): string {
   return context.getOutputSVG();
+}
+
+export function connect(
+  sourceId: string,
+  targetId: string,
+  targetHandle: string
+): void {
+  context.connect(sourceId, targetId, targetHandle);
 }

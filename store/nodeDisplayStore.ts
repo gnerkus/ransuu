@@ -12,6 +12,7 @@ import {
   createDefaultNodes,
   updateNode,
   getOutput,
+  connect,
 } from "@/context/SVGContext";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
@@ -45,6 +46,12 @@ const transformNodeId = nanoid(6);
 
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
+
+export const useGetNodeExternalInputs = (nodeId: string) =>
+  useStore(
+    (store: FlowState) =>
+      store.nodes.filter((node) => node.id === nodeId)[0]?.externalInputs
+  );
 
 export const createContextNodes = () => {
   createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
@@ -155,7 +162,6 @@ export const useStore = create<FlowState>((set, get) => ({
   },
 
   updateNode(id, dataHandle, fieldPath, data) {
-    // TODO: check if `updateNode` is actually synchronous
     updateNode(id, fieldPath, data);
     set({
       nodes: get().nodes.map((node) =>
@@ -177,6 +183,7 @@ export const useStore = create<FlowState>((set, get) => ({
       get().updateNode(nodeId, dataHandle, inputHandle, evt.target.value),
 
   addEdge(data) {
+    // TODO: call connect from source to target within svgcontext
     const id = nanoid(6);
     const edge = {
       ...data,
@@ -185,13 +192,17 @@ export const useStore = create<FlowState>((set, get) => ({
       target: data.target || "",
     };
 
+    if (!data.source || !data.target) return;
+
+    // TODO: we should only create the edge if the connection was successful
     set({ edges: [edge, ...get().edges] });
     if (data.targetHandle) {
       const handle = data.targetHandle;
+      connect(data.source, data.target, data.targetHandle);
       set({
         nodes: get().nodes.map((node) =>
           node.id === data.target
-            ? { ...node, externalnputs: { [handle]: true } }
+            ? { ...node, externalInputs: { [handle]: true } }
             : node
         ),
       });

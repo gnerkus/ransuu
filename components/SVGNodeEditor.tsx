@@ -14,16 +14,11 @@ import {
   createContextNodes,
   useStore,
 } from "@/store/nodeDisplayStore";
-import {
-  NodeDataState,
-  useStore as useNodeDataStore,
-} from "@/store/nodeDataStore";
 
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";
 import { useRef, useEffect } from "react";
 
-// we no longer read from ReactFlow's own store; we read from our own store
 const selector = (store: FlowState) => ({
   nodes: store.nodes,
   edges: store.edges,
@@ -32,18 +27,8 @@ const selector = (store: FlowState) => ({
   addEdge: store.addEdge,
 });
 
-const dataSelector = (store: NodeDataState) => ({
-  output: store.nodes["output"],
-  addDataEdge: store.actions.addEdge,
-});
-
-type CustomAddEgde = (
-  callback: (connection: Connection) => void
-) => (data: Connection) => void;
-
 export default function SVGNodeEditor() {
   const store = useStore(selector, shallow);
-  const { output, addDataEdge } = useNodeDataStore(dataSelector, shallow);
   const loadRef = useRef(null);
 
   useEffect(() => {
@@ -51,12 +36,6 @@ export default function SVGNodeEditor() {
       createContextNodes();
     }
   }, []);
-
-  const customAddEgde: CustomAddEgde =
-    (callback) => (connection: Connection) => {
-      callback(connection);
-      store.addEdge(connection);
-    };
 
   return (
     <ReactFlowProvider>
@@ -66,7 +45,7 @@ export default function SVGNodeEditor() {
           edges={store.edges}
           onNodesChange={store.onNodesChange}
           onEdgesChange={store.onEdgesChange}
-          onConnect={customAddEgde(addDataEdge)}
+          onConnect={store.addEdge}
           nodeTypes={nodeTypes}
           fitView
         >
@@ -75,7 +54,7 @@ export default function SVGNodeEditor() {
           <Background variant={"dots" as BackgroundVariant} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SVGOutput width={512} height={512} svgOutput={output.data} />
+      <SVGOutput width={512} height={512} />
     </ReactFlowProvider>
   );
 }

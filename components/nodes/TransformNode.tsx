@@ -3,11 +3,15 @@ import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
-import { useHandleNodeInput } from "@/store/nodeDisplayStore";
+import {
+  useHandleNodeInput,
+  useGetNodeExternalInputs,
+} from "@/store/nodeDisplayStore";
 import { Point, Rotation } from "@/types/path";
 
-function TransformNode({ id, data, externalnputs }: BaseNode) {
+function TransformNode({ id, data }: BaseNode) {
   const handleNodeInput = useHandleNodeInput();
+  const externalInputs = useGetNodeExternalInputs(id);
 
   const translateData = data.translate as Point;
   const rotateData = data.rotate as Rotation;
@@ -41,12 +45,13 @@ function TransformNode({ id, data, externalnputs }: BaseNode) {
       </div>
 
       {/* Translate */}
-      {!externalnputs?.translate ? (
-        <div className="relative">
-          <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
-            Translation:
-          </div>
-          <Handle type="target" position={Position.Left} id="translate" />
+
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
+          Translation:
+        </div>
+        <Handle type="target" position={Position.Left} id="translate" />
+        {!externalInputs?.translate ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
               {Object.keys(translateData).map((handleId) => (
@@ -59,16 +64,17 @@ function TransformNode({ id, data, externalnputs }: BaseNode) {
               ))}
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {/* Rotate */}
-      {!externalnputs?.rotate ? (
-        <div className="relative">
-          <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
-            Rotation:
-          </div>
-          <Handle type="target" position={Position.Left} id="rotate" />
+
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
+          Rotation:
+        </div>
+        <Handle type="target" position={Position.Left} id="rotate" />
+        {!externalInputs?.rotate ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
               {Object.keys(rotateData).map((handleId) => (
@@ -83,16 +89,17 @@ function TransformNode({ id, data, externalnputs }: BaseNode) {
               ))}
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {/* Scale */}
-      {!externalnputs?.scale ? (
-        <div className="relative">
-          <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
-            Scale:
-          </div>
-          <Handle type="target" position={Position.Left} id="scale" />
+
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
+          Scale:
+        </div>
+        <Handle type="target" position={Position.Left} id="scale" />
+        {!externalInputs?.scale ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
               {Object.keys(scaleData).map((handleId) => (
@@ -105,16 +112,15 @@ function TransformNode({ id, data, externalnputs }: BaseNode) {
               ))}
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {/* Skew */}
-      {!externalnputs?.skew ? (
-        <div className="relative">
-          <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">
-            Skew:
-          </div>
-          <Handle type="target" position={Position.Left} id="skew" />
+
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">Skew:</div>
+        <Handle type="target" position={Position.Left} id="skew" />
+        {!externalInputs?.skew ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
               {Object.keys(skewData).map((handleId) => (
@@ -127,8 +133,8 @@ function TransformNode({ id, data, externalnputs }: BaseNode) {
               ))}
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </CustomNodeWrapper>
   );
 }

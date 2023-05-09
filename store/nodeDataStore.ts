@@ -4,7 +4,6 @@ import { Point } from "@/types/path";
 import { BaseNodeData, HandleOutputPair } from "@/types/nodes";
 import { ChangeEvent } from "react";
 import lodashSet from "lodash.set";
-import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Connection } from "reactflow";
 
 enableMapSet();
@@ -145,7 +144,3 @@ export const useStore = create<NodeDataState>((set, get) => ({
       get().actions.updateNodeOutputs(nodeId, newData, inputHandle),
   },
 }));
-
-if (process.env.NODE_ENV === "development") {
-  mountStoreDevtool("NodeData", useStore);
-}
