@@ -1,4 +1,4 @@
-import { useGraphOutput } from "@/store/nodeDisplayStore";
+import { useGraphOutput } from "@/store/store";
 
 type SVGOutputProps = {
   width: number;

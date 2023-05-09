@@ -13,19 +13,6 @@ export const nodeTypes = {
   svg_groupOutputNode: GroupOutputNode,
 };
 
-export type BaseNodeOperation = (path: PathData, data: any) => PathData;
-
-export type HandleOutputPair = {
-  handle: string;
-  id: string;
-};
-
-export type BaseNodeData = {
-  outputs: Set<HandleOutputPair>;
-  path?: PathData;
-  data?: any;
-};
-
 export type BaseNodeUpdateData = Record<string, string>;
 
 type BaseNodeDataType = {
@@ -48,12 +35,6 @@ export type BaseEdgeData = {
 };
 
 export type BaseEdge = Edge;
-
-export type GroupInputNode = BaseNode & {
-  data: BaseNodeData & { path: PathData };
-};
-
-export type GroupOutputNode = GroupInputNode;
 
 export type NodeInputData = Point;
 

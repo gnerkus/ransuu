@@ -9,11 +9,7 @@ import ReactFlow, {
 } from "reactflow";
 
 import { shallow } from "zustand/shallow";
-import {
-  FlowState,
-  createContextNodes,
-  useStore,
-} from "@/store/nodeDisplayStore";
+import { FlowState, createContextNodes, useStore } from "@/store/store";
 
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";

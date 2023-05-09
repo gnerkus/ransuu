@@ -3,7 +3,7 @@ import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
-import { useHandleNodeInput } from "@/store/nodeDisplayStore";
+import { useHandleNodeInput } from "@/store/store";
 import { Point, Rotation } from "@/types/path";
 
 function TransformNode({ id, data, externalInputs }: BaseNode) {

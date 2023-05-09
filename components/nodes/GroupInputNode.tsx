@@ -1,9 +1,9 @@
-import { GroupInputNode } from "@/types/nodes";
+import { BaseNode } from "@/types/nodes";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 
-function GroupInputNode({ id }: GroupInputNode) {
+function GroupInputNode({ id }: BaseNode) {
   return (
     <CustomNodeWrapper>
       <div className="bg-gray-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
