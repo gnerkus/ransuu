@@ -86,6 +86,8 @@ export function createDefaultNodes(
   transformID: string
 ) {
   const svgGroup = d3.create("g");
+  svgGroup.attr("fill", "#cc3399").attr("stroke", "#ffffff");
+  svgGroup.append("path").attr("d", "M120,0h100v100h-100Z").attr("rx", "15");
 
   const input = new SVGInputNode(inputID, "svg_groupInputNode", {
     shape: svgGroup,
@@ -113,7 +115,7 @@ export function addNode(node: BaseNode<any, any>) {
   context.add(node);
 }
 
-export function updateNode(id: string, attr: string, value: any) {
+export function updateContextNode(id: string, attr: string, value: any) {
   context.update(id, attr, value);
 }
 

@@ -3,15 +3,11 @@ import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
-import {
-  useHandleNodeInput,
-  useGetNodeExternalInputs,
-} from "@/store/nodeDisplayStore";
+import { useHandleNodeInput } from "@/store/nodeDisplayStore";
 import { Point, Rotation } from "@/types/path";
 
-function TransformNode({ id, data }: BaseNode) {
+function TransformNode({ id, data, externalInputs }: BaseNode) {
   const handleNodeInput = useHandleNodeInput();
-  const externalInputs = useGetNodeExternalInputs(id);
 
   const translateData = data.translate as Point;
   const rotateData = data.rotate as Rotation;

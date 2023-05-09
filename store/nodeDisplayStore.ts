@@ -10,7 +10,7 @@ import { create } from "zustand";
 import { BaseEdge, BaseNode } from "@/types/nodes";
 import {
   createDefaultNodes,
-  updateNode,
+  updateContextNode,
   getOutput,
   connect,
 } from "@/context/SVGContext";
@@ -47,15 +47,12 @@ const transformNodeId = nanoid(6);
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
 
-export const useGetNodeExternalInputs = (nodeId: string) =>
-  useStore(
-    (store: FlowState) =>
-      store.nodes.filter((node) => node.id === nodeId)[0]?.externalInputs
-  );
-
 export const createContextNodes = () => {
   createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
 };
+
+export const useGraphOutput = () =>
+  useStore((store: FlowState) => store.output);
 
 export const useStore = create<FlowState>((set, get) => ({
   output: getOutput(),
@@ -162,7 +159,7 @@ export const useStore = create<FlowState>((set, get) => ({
   },
 
   updateNode(id, dataHandle, fieldPath, data) {
-    updateNode(id, fieldPath, data);
+    updateContextNode(id, fieldPath, data);
     set({
       nodes: get().nodes.map((node) =>
         node.id === id
