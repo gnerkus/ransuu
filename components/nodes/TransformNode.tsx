@@ -1,4 +1,4 @@
-import { BaseNode } from "@/types/nodes";
+import { BaseNodeProps } from "@/types/nodes";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
@@ -6,7 +6,7 @@ import { NodeTextInput } from "../NodeTextInput";
 import { useHandleNodeInput } from "@/store/store";
 import { TransformNodeAttrs } from "@/types/path";
 
-function TransformNode({ id, data, externalInputs }: BaseNode) {
+function TransformNode({ id, data, externalInputs }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
   const nodeData = data as TransformNodeAttrs;
 
