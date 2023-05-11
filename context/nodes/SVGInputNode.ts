@@ -1,9 +1,11 @@
+import { PathData, PathInput } from "@/types/path";
 import BaseNode from "../BaseNode";
-import { Shape, ShapeOutput } from "../SVGContext";
 
-class SVGInputNode extends BaseNode<ShapeOutput, Shape> {
-  calculateOutput(): Shape {
-    return this.attrs.shape;
+class SVGInputNode extends BaseNode<PathData, PathInput> {
+  calculateOutput(): PathInput {
+    return {
+      path: this.attrs,
+    };
   }
 }
 

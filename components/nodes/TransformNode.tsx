@@ -1,18 +1,14 @@
-import { BaseNode } from "@/types/nodes";
+import { BaseNodeProps } from "@/types/nodes";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
 import { useHandleNodeInput } from "@/store/store";
-import { Point, Rotation } from "@/types/path";
+import { TransformNodeAttrs } from "@/types/path";
 
-function TransformNode({ id, data, externalInputs }: BaseNode) {
+function TransformNode({ id, data, externalInputs }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
-
-  const translateData = data.translate as Point;
-  const rotateData = data.rotate as Rotation;
-  const scaleData = data.scale as Point;
-  const skewData = data.skew as Point;
+  const nodeData = data as TransformNodeAttrs;
 
   return (
     <CustomNodeWrapper>
@@ -50,11 +46,11 @@ function TransformNode({ id, data, externalInputs }: BaseNode) {
         {!externalInputs?.translate ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-              {Object.keys(translateData).map((handleId) => (
+              {Object.keys(nodeData.translate).map((handleId) => (
                 <NodeTextInput
                   key={handleId}
                   handleId={handleId}
-                  value={`${translateData[handleId as "x" | "y"]}`}
+                  value={`${nodeData.translate[handleId as "x" | "y"]}`}
                   onChange={handleNodeInput(id, "translate", handleId)}
                 />
               ))}
@@ -73,12 +69,12 @@ function TransformNode({ id, data, externalInputs }: BaseNode) {
         {!externalInputs?.rotate ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-              {Object.keys(rotateData).map((handleId) => (
+              {Object.keys(nodeData.rotate).map((handleId) => (
                 <NodeTextInput
                   key={handleId}
                   handleId={handleId}
                   value={`${
-                    rotateData[handleId as "angle" | "centerX" | "centerY"]
+                    nodeData.rotate[handleId as "angle" | "centerX" | "centerY"]
                   }`}
                   onChange={handleNodeInput(id, "rotate", handleId)}
                 />
@@ -98,11 +94,11 @@ function TransformNode({ id, data, externalInputs }: BaseNode) {
         {!externalInputs?.scale ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-              {Object.keys(scaleData).map((handleId) => (
+              {Object.keys(nodeData.scale).map((handleId) => (
                 <NodeTextInput
                   key={handleId}
                   handleId={handleId}
-                  value={`${scaleData[handleId as "x" | "y"]}`}
+                  value={`${nodeData.scale[handleId as "x" | "y"]}`}
                   onChange={handleNodeInput(id, "scale", handleId)}
                 />
               ))}
@@ -119,11 +115,11 @@ function TransformNode({ id, data, externalInputs }: BaseNode) {
         {!externalInputs?.skew ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-              {Object.keys(skewData).map((handleId) => (
+              {Object.keys(nodeData.skew).map((handleId) => (
                 <NodeTextInput
                   key={handleId}
                   handleId={handleId}
-                  value={`${skewData[handleId as "x" | "y"]}`}
+                  value={`${nodeData.skew[handleId as "x" | "y"]}`}
                   onChange={handleNodeInput(id, "skew", handleId)}
                 />
               ))}

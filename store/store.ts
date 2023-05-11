@@ -16,11 +16,12 @@ import {
 } from "@/context/SVGContext";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
+import { PathData } from "@/types/path";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 export type FlowState = {
-  output: string;
+  output: PathData[];
   nodes: BaseNode[];
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
@@ -44,12 +45,10 @@ const outputNodeId = nanoid(6);
 const vectorNodeId = nanoid(6);
 const transformNodeId = nanoid(6);
 
+createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
+
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
-
-export const createContextNodes = () => {
-  createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
-};
 
 export const useGraphOutput = () =>
   useStore((store: FlowState) => store.output);
@@ -65,16 +64,13 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        // TODO: remove the redundant 'path' field
-        path: {
-          points: [
-            { x: 32, y: 32 },
-            { x: 128, y: 32 },
-            { x: 128, y: 128 },
-            { x: 32, y: 128 },
-          ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
-        },
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ],
+        attributes: { fill: "#cc3399", stroke: "#ffffff" },
       },
     },
     {
@@ -85,16 +81,13 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 100,
       },
       data: {
-        // TODO: remove the redundant 'path' field
-        path: {
-          points: [
-            { x: 32, y: 32 },
-            { x: 128, y: 32 },
-            { x: 128, y: 128 },
-            { x: 32, y: 128 },
-          ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
-        },
+        points: [
+          { x: 32, y: 32 },
+          { x: 128, y: 32 },
+          { x: 128, y: 128 },
+          { x: 32, y: 128 },
+        ],
+        attributes: { fill: "#cc3399", stroke: "#ffffff" },
       },
     },
     {
@@ -105,10 +98,8 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        vector: {
-          x: 1,
-          y: 1,
-        },
+        x: 1,
+        y: 1,
       },
     },
     {
@@ -119,7 +110,6 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        // TODO: remove the redundant 'path' field
         path: {
           points: [
             { x: 32, y: 32 },
@@ -127,7 +117,7 @@ export const useStore = create<FlowState>((set, get) => ({
             { x: 128, y: 128 },
             { x: 32, y: 128 },
           ],
-          attributes: { fill: "#cc3399", stroke: "##ffffff" },
+          attributes: { fill: "#cc3399", stroke: "#ffffff" },
         },
         translate: { x: 0, y: 0 },
         rotate: { angle: 0, centerX: 0, centerY: 0 },
@@ -165,7 +155,11 @@ export const useStore = create<FlowState>((set, get) => ({
         node.id === id
           ? {
               ...node,
-              data: lodashSet(node.data, `${dataHandle}.${fieldPath}`, data),
+              data: lodashSet(
+                node.data,
+                [dataHandle, fieldPath].filter(Boolean).join("."),
+                data
+              ),
             }
           : node
       ),
