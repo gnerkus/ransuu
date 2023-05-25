@@ -1,4 +1,4 @@
-import { Point, Rotation } from "@/types/path";
+import { Point, Rotation, TransformData } from "@/types/path";
 
 export type ResultMap = Map<string, Point | Rotation | Shape>;
 
@@ -8,23 +8,29 @@ export type ResultMap = Map<string, Point | Rotation | Shape>;
  */
 
 type AttributeList = {
-  transform: {
+  transform?: {
     translate: VectorFunction;
     scale: VectorFunction;
     skew: VectorFunction;
     rotate: QuaternionFunction;
   };
-  fill: string;
-  stroke: string;
+  fill?: string;
+  stroke?: string;
 };
 
-type VectorFunction = (source: Point, index: number) => Point;
-type QuaternionFunction = (source: Rotation, index: number) => Rotation;
+export type VectorFunction = (source: Point, index: number) => Point;
+export type QuaternionFunction = (source: Rotation, index: number) => Rotation;
 
 export type Shape = {
-  instance: {
+  instance?: {
     count: number;
     attributes: AttributeList;
   };
   attributes: AttributeList;
 };
+
+type ShapeInput = {
+  shape: Shape;
+};
+
+export type TransformAttrs = ShapeInput & TransformData;

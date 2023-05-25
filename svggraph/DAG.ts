@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import Vertex from "./nodes/Vertex";
+import Vertex from "./Vertex";
 import { ResultMap } from "./types";
 
 type LeafNodesResult = {

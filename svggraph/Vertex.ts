@@ -1,5 +1,5 @@
 import lodashSet from "lodash.set";
-import { ResultMap } from "../types";
+import { ResultMap } from "./types";
 
 export default abstract class Vertex<InputType extends object, OutputType> {
   readonly id: string;

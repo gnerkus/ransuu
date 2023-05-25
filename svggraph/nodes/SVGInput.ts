@@ -1,5 +1,5 @@
 import { ResultMap, Shape } from "../types";
-import Vertex from "./Vertex";
+import Vertex from "../Vertex";
 
 export default class SVGInput extends Vertex<Shape, Shape> {
   execute(resultMap: ResultMap): ResultMap {
