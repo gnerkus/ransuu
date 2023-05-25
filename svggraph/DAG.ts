@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import SVGOutput from "./nodes/SVGOutput";
 import Vertex from "./nodes/Vertex";
+import { ResultMap } from "./types";
 
 type LeafNodesResult = {
   freqMap: Map<Vertex<any, any>, number>;
@@ -134,9 +134,9 @@ const topoSort = (
 
 export default class DAG {
   readonly id: string;
-  readonly root: SVGOutput;
+  readonly root: Vertex<any, any>;
   readonly graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>;
-  constructor(root: SVGOutput) {
+  constructor(root: Vertex<any, any>) {
     this.id = nanoid(6);
     this.graph = new Map();
     this.root = root;
@@ -186,11 +186,92 @@ export default class DAG {
     return node;
   }
 
-  connect() {}
+  deleteNode(node: Vertex<any, any>) {
+    let deleted = false;
+    if (isNode(node) && node !== this.root) {
+      deleted = this.graph.delete(node);
+      if (deleted) {
+        for (const [vertex, outputs] of Array.from(this.graph.entries())) {
+          outputs.delete(node);
+          vertex.deleteInput(node);
+        }
+      }
+    }
 
-  /**
-   * TODO:
-   * when computing the DAG, create a Map<string, any> which will store the values returned when a node is computed
-   */
-  execute() {}
+    return deleted;
+  }
+
+  connect(
+    input: Vertex<any, any>,
+    target: Vertex<any, any>,
+    inputHandlePath: string[]
+  ): boolean | DAG {
+    if (!(isNode(input) && isNode(target))) {
+      return false;
+    }
+
+    // Root cannot be made an input to another node to prevent cycles
+    if (input === this.root) {
+      return this;
+    }
+
+    const inputOutputs = this.graph.get(input);
+    // Only members of the graph can be connected
+    if (!inputOutputs) {
+      return this;
+    }
+
+    if (!this.graph.has(target)) {
+      return this;
+    }
+
+    // Nodes with an existing connection cannot be reconnected to prevent cycles
+    if (inputOutputs.has(target)) {
+      return this;
+    }
+
+    inputOutputs.add(target);
+    target.addInput(inputHandlePath, input);
+
+    if (this.getTopo().length < this.getNodes().length) {
+      this.disconnect(input, target);
+    }
+
+    return this;
+  }
+
+  disconnect(input: Vertex<any, any>, target: Vertex<any, any>): boolean | DAG {
+    if (!(isNode(input) && isNode(target))) {
+      return false;
+    }
+
+    const inputOutputs = this.graph.get(input);
+
+    if (inputOutputs) {
+      inputOutputs.delete(target);
+      target.deleteInput(input);
+    }
+
+    return this;
+  }
+
+  clean() {
+    this.getOrphans().forEach((orphan) => this.deleteNode(orphan));
+    if (this.getOrphans().length) {
+      this.clean();
+    }
+
+    return this;
+  }
+
+  solve() {
+    const resultMap: ResultMap = new Map();
+
+    const noOrphans = removeOrphans(this.graph);
+    const validTopoNodes = this.getTopo().filter((node) => noOrphans.has(node));
+
+    return validTopoNodes.reduce((accumulator, node) => {
+      return node.execute(accumulator);
+    }, resultMap);
+  }
 }

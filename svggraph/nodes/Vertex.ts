@@ -5,19 +5,22 @@ export default abstract class Vertex<InputType extends object, OutputType> {
   readonly id: string;
   readonly nodeType: string;
   /**
-   * Map of property pathnames to vertext ids e.g
+   * Map of property pathnames to vertex e.g
    *
-   * this.inputs.set(['translate'], "1234")
+   * this.inputs.set(['translate'], new Vertex())
    * sets the Vertex with id "1234" as the source of the translate input
+   *
+   * used when computing the output of a node
    */
-  readonly inputs: Map<Array<string>, string>;
+  readonly inputsByPath: Map<string, Vertex<any, any>>;
+
   // TODO: refine the shape of the attrs
   attrs: InputType;
 
   constructor(nodeId: string, nodeType: string, attrs: InputType) {
     this.id = nodeId;
     this.nodeType = nodeType;
-    this.inputs = new Map();
+    this.inputsByPath = new Map();
     this.attrs = attrs;
   }
 
@@ -26,7 +29,20 @@ export default abstract class Vertex<InputType extends object, OutputType> {
   }
 
   addInput(path: string[], node: Vertex<any, any>): void {
-    this.inputs.set(path, node.id);
+    // join the path to allow unique
+    this.inputsByPath.set(path.join("."), node);
+  }
+
+  deleteInput(node: Vertex<any, any>): boolean {
+    const nodePathPair = Array.from(this.inputsByPath.entries()).filter(
+      (entry) => entry[1] === node
+    )[0];
+
+    if (nodePathPair) {
+      return this.inputsByPath.delete(nodePathPair[0]);
+    }
+
+    return false;
   }
 
   /**
