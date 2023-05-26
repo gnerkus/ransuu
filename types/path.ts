@@ -10,10 +10,10 @@ export type Rotation = {
 };
 
 export type TransformData = {
-  translate: Point;
-  rotate: Rotation;
-  skew: Point;
-  scale: Point;
+  translate?: Point;
+  rotate?: Rotation;
+  skew?: Point;
+  scale?: Point;
 };
 
 export type PathData = {

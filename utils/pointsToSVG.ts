@@ -89,7 +89,7 @@ type PathDataCommand =
   | "A"
   | "a";
 
-type PathDataItem = {
+export type PathDataItem = {
   command: PathDataCommand;
   args: number[];
 };
@@ -100,7 +100,7 @@ type StringifyPathDataOptions = {
   disableSpaceAfterFlags?: boolean;
 };
 
-const stringifyPathData = ({
+export const stringifyPathData = ({
   pathData,
   precision,
   disableSpaceAfterFlags,

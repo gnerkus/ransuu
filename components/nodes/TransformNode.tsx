@@ -4,11 +4,12 @@ import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
 import { useHandleNodeInput } from "@/store/store";
-import { TransformNodeAttrs } from "@/types/path";
+import { TransformNodeData } from "@/svggraph/types";
 
-function TransformNode({ id, data, externalInputs }: BaseNodeProps) {
+function TransformNode({ id, data }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
-  const nodeData = data as TransformNodeAttrs;
+  const nodeData = data.data as TransformNodeData;
+  const externalInputs = data.externalInputs;
 
   return (
     <CustomNodeWrapper>
