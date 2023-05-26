@@ -13,10 +13,10 @@ export type DAGAttributeList = {
   fill?: ColorFunction;
   stroke?: ColorFunction;
   transform?: {
-    translate: VectorFunction;
-    scale: VectorFunction;
-    skew: VectorFunction;
-    rotate: QuaternionFunction;
+    translate?: VectorFunction;
+    scale?: VectorFunction;
+    skew?: VectorFunction;
+    rotate?: QuaternionFunction;
   };
 };
 
@@ -44,7 +44,7 @@ type DAGShapeInput = {
   shape: DAGFunctions;
 };
 
-type TransformNodeData = {
+export type TransformNodeData = {
   translate: Point;
   rotate: Rotation;
   skew: Point;

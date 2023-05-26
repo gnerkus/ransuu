@@ -9,7 +9,7 @@ import {
 } from "./types";
 
 const serializeColor = (
-  sourceColor: string,
+  sourceColor = "",
   transformFunction: ColorFunction,
   index: number
 ): string => {
@@ -18,7 +18,7 @@ const serializeColor = (
 const serializeVector = (
   handle: string,
   transformFunction: VectorFunction,
-  vector: Point,
+  vector = { x: 0, y: 0 },
   index: number
 ): string => {
   const newVector = transformFunction(vector, index);
@@ -28,7 +28,7 @@ const serializeVector = (
 const serializeRotation = (
   handle: string,
   transformFunction: QuaternionFunction,
-  rotation: Rotation,
+  rotation = { angle: 0, centerX: 0, centerY: 0 },
   index: number
 ): string => {
   const newRotation = transformFunction(rotation, index);
@@ -39,28 +39,34 @@ const serializeTransform = (
   index: number,
   attrs?: TransformData,
   functions?: DAGAttributeList
-): string => {
-  if (!(attrs && functions?.transform)) return "";
+): string | undefined => {
+  if (!functions?.transform) return undefined;
 
   return [
-    attrs.translate &&
+    functions.transform.translate &&
       serializeVector(
         "translate",
         functions.transform.translate,
-        attrs.translate,
+        attrs?.translate,
         index
       ),
-    attrs.rotate &&
+    functions.transform.rotate &&
       serializeRotation(
         "rotate",
         functions.transform.rotate,
-        attrs.rotate,
+        attrs?.rotate,
         index
       ),
-    attrs.scale &&
-      serializeVector("scale", functions.transform.scale, attrs.scale, index),
-    attrs.skew ? `skewX(${functions.transform.skew(attrs.skew, index).x})` : "",
-    attrs.skew ? `skewY(${functions.transform.skew(attrs.skew, index).y})` : "",
+    functions.transform.scale &&
+      serializeVector("scale", functions.transform.scale, attrs?.scale, index),
+    functions.transform.skew &&
+      `skewX(${
+        functions.transform.skew(attrs?.skew || { x: 0, y: 0 }, index).x
+      })`,
+    functions.transform.skew &&
+      `skewY(${
+        functions.transform.skew(attrs?.skew || { x: 0, y: 0 }, index).y
+      })`,
   ].join(" ");
 };
 export const serializeAttributes = (
@@ -68,18 +74,13 @@ export const serializeAttributes = (
   functions: DAGAttributeList,
   index: number
 ): SerializedAttributes => {
-  return {
-    fill:
-      initial.fill &&
-      functions.fill &&
-      serializeColor(initial.fill, functions.fill, index),
+  const result = {
+    fill: functions.fill && serializeColor(initial.fill, functions.fill, index),
     stroke:
-      initial.stroke &&
       functions.stroke &&
       serializeColor(initial.stroke, functions.stroke, index),
-    transform:
-      initial.transform &&
-      functions.transform &&
-      serializeTransform(index, initial.transform, functions),
+    transform: serializeTransform(index, initial.transform, functions),
   };
+
+  return result;
 };

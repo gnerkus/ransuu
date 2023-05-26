@@ -8,7 +8,7 @@ import {
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { BaseEdge, BaseNode, BaseNodeDataType } from "@/types/nodes";
-import dagInstance, { IDS } from "@/svggraph/init";
+import dagInstance, { IDS, initDAG } from "@/svggraph/init";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
 import { DAGFunctions, Shape } from "@/svggraph/types";
@@ -61,7 +61,7 @@ export const useGraphOutput = () =>
   useStore((store: FlowState) => store.graphOutput);
 
 export const useStore = create<FlowState>((set, get) => ({
-  graphOutput: dagInstance.solve().get(IDS.outputID) as DAGFunctions,
+  graphOutput: initDAG,
   sourceSVG: initSVG,
   nodes: [
     {
@@ -71,7 +71,9 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 100,
         y: 100,
       },
-      data: {},
+      data: {
+        data: {},
+      },
     },
     {
       id: IDS.outputID,
@@ -80,7 +82,9 @@ export const useStore = create<FlowState>((set, get) => ({
         x: 500,
         y: 100,
       },
-      data: {},
+      data: {
+        data: {},
+      },
     },
     {
       id: IDS.initVectorID,
@@ -90,8 +94,10 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        x: 1,
-        y: 1,
+        data: {
+          x: 0,
+          y: 0,
+        },
       },
     },
     {
@@ -102,10 +108,15 @@ export const useStore = create<FlowState>((set, get) => ({
         y: 200,
       },
       data: {
-        translate: { x: 0, y: 0 },
-        rotate: { angle: 0, centerX: 0, centerY: 0 },
-        scale: { x: 1, y: 1 },
-        skew: { x: 0, y: 0 },
+        externalInputs: {
+          translate: true,
+        },
+        data: {
+          translate: { x: 0, y: 0 },
+          rotate: { angle: 0, centerX: 0, centerY: 0 },
+          scale: { x: 1, y: 1 },
+          skew: { x: 0, y: 0 },
+        },
       },
     },
   ],
@@ -115,7 +126,7 @@ export const useStore = create<FlowState>((set, get) => ({
       source: IDS.inputID,
       target: IDS.initTransformID,
       sourceHandle: null,
-      targetHandle: "shape",
+      targetHandle: "path",
     },
     {
       id: nanoid(6),
@@ -128,7 +139,7 @@ export const useStore = create<FlowState>((set, get) => ({
       id: nanoid(6),
       source: IDS.initTransformID,
       target: IDS.outputID,
-      sourceHandle: "shape",
+      sourceHandle: "path",
       targetHandle: null,
     },
   ],
@@ -146,10 +157,16 @@ export const useStore = create<FlowState>((set, get) => ({
   },
 
   updateNode(id, dataHandle, fieldPath, data) {
+    console.log("update data", id, dataHandle, fieldPath, data);
     const dataNode = dagInstance.getNode(id);
     if (!dataNode) return;
 
-    dataNode.attrs = data;
+    dataNode.attrs = lodashSet(
+      dataNode.attrs,
+      [dataHandle || undefined, fieldPath].filter(Boolean).join("."),
+      data
+    );
+
     // solve the graph and update the store
     const output = dagInstance.solve().get(IDS.outputID) as DAGFunctions;
     set({
@@ -158,11 +175,14 @@ export const useStore = create<FlowState>((set, get) => ({
         node.id === id
           ? {
               ...node,
-              data: lodashSet<BaseNodeDataType>(
-                node.data,
-                [dataHandle, fieldPath].filter(Boolean).join("."),
-                data
-              ),
+              data: {
+                ...node.data,
+                data: lodashSet<BaseNodeDataType>(
+                  node.data.data,
+                  [dataHandle, fieldPath].filter(Boolean).join("."),
+                  data
+                ),
+              },
             }
           : node
       ),
@@ -198,7 +218,13 @@ export const useStore = create<FlowState>((set, get) => ({
       set({
         nodes: get().nodes.map((node) =>
           node.id === data.target
-            ? { ...node, externalInputs: { [handle]: true } }
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  externalInputs: { [handle]: true },
+                },
+              }
             : node
         ),
       });

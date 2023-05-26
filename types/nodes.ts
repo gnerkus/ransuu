@@ -18,16 +18,20 @@ export type BaseNodeUpdateData = Record<string, string>;
 export type BaseNodeDataType = Point | Rotation | TransformData | {};
 
 export type BaseNodeProps = NodeProps & {
-  externalInputs?: Record<string, boolean>;
-  data: BaseNodeDataType;
+  data: {
+    externalInputs?: Record<string, boolean>;
+    data: BaseNodeDataType;
+  };
 };
 
 export type BaseNode = {
   id: string;
   type?: string;
   position: XYPosition;
-  externalInputs?: Record<string, boolean>;
-  data: BaseNodeDataType;
+  data: {
+    externalInputs?: Record<string, boolean>;
+    data: BaseNodeDataType;
+  };
 };
 
 export type BaseEdgeData = {

@@ -77,7 +77,10 @@ const getLeafNodes = (
     outputs.forEach((vertex) => {
       const vertexFreq = freqMap.get(vertex);
 
-      freqMap.set(vertex, vertexFreq ? vertexFreq + 1 : 0);
+      freqMap.set(
+        vertex,
+        Number.isInteger(vertexFreq) ? (vertexFreq || 0) + 1 : 0
+      );
     })
   );
 
@@ -221,7 +224,7 @@ export default class DAG {
       return this;
     }
 
-    if (!this.graph.has(target)) {
+    if (!this.graph.has(target) && target !== this.root) {
       return this;
     }
 

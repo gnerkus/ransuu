@@ -8,7 +8,7 @@ import { useHandleNodeInput } from "@/store/store";
 
 function VectorNode({ id, data }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
-  const nodeData = data as Point;
+  const nodeData = data.data as Point;
 
   return (
     <CustomNodeWrapper>
