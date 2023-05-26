@@ -1,14 +1,14 @@
 import { Point, Rotation } from "@/types/path";
 import Vertex from "../Vertex";
 import {
+  DAGFunctions,
   QuaternionFunction,
   ResultMap,
-  Shape,
-  TransformAttrs,
+  TransformNodeAttrs,
   VectorFunction,
 } from "../types";
 
-class SVGTransformVertex extends Vertex<TransformAttrs, Shape> {
+class SVGTransformVertex extends Vertex<TransformNodeAttrs, DAGFunctions> {
   execute(resultMap: ResultMap): ResultMap {
     const translateNodeInput = this.inputsByPath.get("translate");
     const translate = translateNodeInput
@@ -55,7 +55,7 @@ class SVGTransformVertex extends Vertex<TransformAttrs, Shape> {
       };
     };
 
-    const transformResult: Shape = {
+    const transformResult: DAGFunctions = {
       ...this.attrs.shape,
       attributes: {
         ...this.attrs.shape.attributes,

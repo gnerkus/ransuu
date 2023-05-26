@@ -13,9 +13,12 @@ const serializeTransform = (attrs?: TransformData): string => {
   if (!attrs) return "";
 
   return [
-    serializeVector("translate", attrs.translate),
-    serializeRotation("rotate", attrs.rotate),
-    serializeVector("scale", attrs.scale),
+    serializeVector("translate", attrs.translate || { x: 0, y: 0 }),
+    serializeRotation(
+      "rotate",
+      attrs.rotate || { centerX: 0, centerY: 0, angle: 0 }
+    ),
+    serializeVector("scale", attrs.scale || { x: 0, y: 0 }),
     attrs.skew ? `skewX(${attrs.skew.x})` : "",
     attrs.skew ? `skewY(${attrs.skew.y})` : "",
   ].join(" ");
