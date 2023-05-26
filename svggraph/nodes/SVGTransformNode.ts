@@ -8,7 +8,7 @@ import {
   VectorFunction,
 } from "../types";
 
-class SVGTransformVertex extends Vertex<TransformNodeAttrs, DAGFunctions> {
+class SVGTransformNode extends Vertex<TransformNodeAttrs, DAGFunctions> {
   execute(resultMap: ResultMap): ResultMap {
     const translateNodeInput = this.inputsByPath.get("translate");
     const translate = translateNodeInput
@@ -73,4 +73,4 @@ class SVGTransformVertex extends Vertex<TransformNodeAttrs, DAGFunctions> {
   }
 }
 
-export default SVGTransformVertex;
+export default SVGTransformNode;

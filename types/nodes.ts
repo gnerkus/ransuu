@@ -1,6 +1,6 @@
 import VectorNode from "@/components/nodes/VectorNode";
 import { Edge, NodeProps } from "reactflow";
-import { PathData, Point, Rotation, TransformNodeAttrs } from "./path";
+import { Point, Rotation, TransformData } from "./path";
 import { XYPosition } from "reactflow";
 import GroupInputNode from "@/components/nodes/GroupInputNode";
 import GroupOutputNode from "@/components/nodes/GroupOutputNode";
@@ -15,7 +15,7 @@ export const nodeTypes = {
 
 export type BaseNodeUpdateData = Record<string, string>;
 
-type BaseNodeDataType = PathData | Point | Rotation | TransformNodeAttrs;
+export type BaseNodeDataType = Point | Rotation | TransformData | {};
 
 export type BaseNodeProps = NodeProps & {
   externalInputs?: Record<string, boolean>;

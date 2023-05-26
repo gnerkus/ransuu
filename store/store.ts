@@ -7,21 +7,32 @@ import {
 } from "reactflow";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
-import { BaseEdge, BaseNode } from "@/types/nodes";
-import {
-  createDefaultNodes,
-  updateContextNode,
-  getOutput,
-  connect,
-} from "@/context/SVGContext";
+import { BaseEdge, BaseNode, BaseNodeDataType } from "@/types/nodes";
+import dagInstance, { IDS } from "@/svggraph/init";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
-import { PathData } from "@/types/path";
+import { DAGFunctions, Shape } from "@/svggraph/types";
+
+const initSVG: Shape = {
+  instance: [],
+  path: [
+    { command: "M", args: [0, 0] },
+    { command: "H", args: [0 + 32] },
+    { command: "V", args: [0 + 32] },
+    { command: "H", args: [0] },
+    { command: "z", args: [] },
+  ],
+  attributes: {
+    fill: "#cc3399",
+    stroke: "#ffffff",
+  },
+};
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 export type FlowState = {
-  output: PathData[];
+  sourceSVG: Shape;
+  graphOutput: DAGFunctions;
   nodes: BaseNode[];
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
@@ -40,58 +51,39 @@ export type FlowState = {
   ) => (evt: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const inputNodeId = nanoid(6);
-const outputNodeId = nanoid(6);
-const vectorNodeId = nanoid(6);
-const transformNodeId = nanoid(6);
-
-createDefaultNodes(inputNodeId, outputNodeId, vectorNodeId, transformNodeId);
-
 export const useHandleNodeInput = () =>
   useStore((store: FlowState) => store.handleNodeInput);
 
+export const useSourceSVG = () =>
+  useStore((store: FlowState) => store.sourceSVG);
+
 export const useGraphOutput = () =>
-  useStore((store: FlowState) => store.output);
+  useStore((store: FlowState) => store.graphOutput);
 
 export const useStore = create<FlowState>((set, get) => ({
-  output: getOutput(),
+  graphOutput: dagInstance.solve().get(IDS.outputID) as DAGFunctions,
+  sourceSVG: initSVG,
   nodes: [
     {
-      id: inputNodeId,
+      id: IDS.inputID,
       type: "svg_groupInputNode",
       position: {
         x: 100,
         y: 100,
       },
-      data: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ],
-        attributes: { fill: "#cc3399", stroke: "#ffffff" },
-      },
+      data: {},
     },
     {
-      id: outputNodeId,
+      id: IDS.outputID,
       type: "svg_groupOutputNode",
       position: {
         x: 500,
         y: 100,
       },
-      data: {
-        points: [
-          { x: 32, y: 32 },
-          { x: 128, y: 32 },
-          { x: 128, y: 128 },
-          { x: 32, y: 128 },
-        ],
-        attributes: { fill: "#cc3399", stroke: "#ffffff" },
-      },
+      data: {},
     },
     {
-      id: vectorNodeId,
+      id: IDS.initVectorID,
       type: "svg_vectorNode",
       position: {
         x: 300,
@@ -103,22 +95,13 @@ export const useStore = create<FlowState>((set, get) => ({
       },
     },
     {
-      id: transformNodeId,
+      id: IDS.initTransformID,
       type: "svg_transformNode",
       position: {
         x: 500,
         y: 200,
       },
       data: {
-        path: {
-          points: [
-            { x: 32, y: 32 },
-            { x: 128, y: 32 },
-            { x: 128, y: 128 },
-            { x: 32, y: 128 },
-          ],
-          attributes: { fill: "#cc3399", stroke: "#ffffff" },
-        },
         translate: { x: 0, y: 0 },
         rotate: { angle: 0, centerX: 0, centerY: 0 },
         scale: { x: 1, y: 1 },
@@ -128,10 +111,24 @@ export const useStore = create<FlowState>((set, get) => ({
   ],
   edges: [
     {
-      id: "e1-2",
-      source: inputNodeId,
-      target: outputNodeId,
+      id: nanoid(6),
+      source: IDS.inputID,
+      target: IDS.initTransformID,
       sourceHandle: null,
+      targetHandle: "shape",
+    },
+    {
+      id: nanoid(6),
+      source: IDS.initVectorID,
+      target: IDS.initTransformID,
+      sourceHandle: null,
+      targetHandle: "translate",
+    },
+    {
+      id: nanoid(6),
+      source: IDS.initTransformID,
+      target: IDS.outputID,
+      sourceHandle: "shape",
       targetHandle: null,
     },
   ],
@@ -149,13 +146,19 @@ export const useStore = create<FlowState>((set, get) => ({
   },
 
   updateNode(id, dataHandle, fieldPath, data) {
-    updateContextNode(id, fieldPath, data);
+    const dataNode = dagInstance.getNode(id);
+    if (!dataNode) return;
+
+    dataNode.attrs = data;
+    // solve the graph and update the store
+    const output = dagInstance.solve().get(IDS.outputID) as DAGFunctions;
     set({
+      graphOutput: output,
       nodes: get().nodes.map((node) =>
         node.id === id
           ? {
               ...node,
-              data: lodashSet(
+              data: lodashSet<BaseNodeDataType>(
                 node.data,
                 [dataHandle, fieldPath].filter(Boolean).join("."),
                 data
@@ -164,9 +167,6 @@ export const useStore = create<FlowState>((set, get) => ({
           : node
       ),
     });
-    set({
-      output: getOutput(),
-    });
   },
 
   handleNodeInput:
@@ -174,7 +174,15 @@ export const useStore = create<FlowState>((set, get) => ({
       get().updateNode(nodeId, dataHandle, inputHandle, evt.target.value),
 
   addEdge(data) {
-    // TODO: call connect from source to target within svgcontext
+    if (!data.source || !data.target) return;
+
+    const sourceNode = dagInstance.getNode(data.source);
+    const targetNode = dagInstance.getNode(data.target);
+
+    if (!(sourceNode && targetNode)) return;
+
+    dagInstance.connect(sourceNode, targetNode, [data.targetHandle || ""]);
+
     const id = nanoid(6);
     const edge = {
       ...data,
@@ -183,13 +191,10 @@ export const useStore = create<FlowState>((set, get) => ({
       target: data.target || "",
     };
 
-    if (!data.source || !data.target) return;
-
     // TODO: we should only create the edge if the connection was successful
     set({ edges: [edge, ...get().edges] });
     if (data.targetHandle) {
       const handle = data.targetHandle;
-      connect(data.source, data.target, data.targetHandle);
       set({
         nodes: get().nodes.map((node) =>
           node.id === data.target
