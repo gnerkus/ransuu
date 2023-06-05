@@ -32,12 +32,13 @@ type SVGOutputProps = {
   height: number;
 };
 
-export default function SVGOutput({ width, height }: SVGOutputProps) {
+export default function SVGOutput({width, height}: SVGOutputProps) {
   const sourceSVG = useSourceSVG();
   const output = useGraphOutput();
 
   return (
-    <svg
+    <div className="bg-white rounded-xl shadow-md shadow-gray-200 w-full md:w-1/2 lg:w-full h-full lg:h-1/3">
+      <svg
       xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={height}
@@ -52,5 +53,6 @@ export default function SVGOutput({ width, height }: SVGOutputProps) {
         ></path>
       </g>
     </svg>
+    </div>
   );
 }

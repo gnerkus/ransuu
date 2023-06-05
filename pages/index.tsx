@@ -1,6 +1,6 @@
 import Head from "next/head";
-import SVGNodeEditor from "@/components/SVGNodeEditor";
-import Layout from "@/components/TEMP_blockout/Layout";
+import SVGNodeEditor from "@/components/layout/SVGNodeEditor";
+import Layout from "@/components/layout/Layout";
 
 export default function Home() {
   return (

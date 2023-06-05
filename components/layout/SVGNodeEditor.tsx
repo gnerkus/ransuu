@@ -12,6 +12,8 @@ import { FlowState, useStore } from "@/store/store";
 
 import "reactflow/dist/style.css";
 import { nodeTypes } from "@/types/nodes";
+import NodeMenu from "./NodeMenu";
+import SVGMeta from "./SVGMeta";
 
 const selector = (store: FlowState) => ({
   nodes: store.nodes,
@@ -25,7 +27,8 @@ export default function SVGNodeEditor() {
   const store = useStore(selector, shallow);
 
   return (
-    <ReactFlowProvider>
+    <div className="relative bg-gray-100 w-full h-full">
+      <ReactFlowProvider>
       <div style={{ width: "100vw", height: "100vh" }}>
         <ReactFlow
           nodes={store.nodes}
@@ -41,7 +44,13 @@ export default function SVGNodeEditor() {
           <Background variant={"dots" as BackgroundVariant} gap={12} size={1} />
         </ReactFlow>
       </div>
-      <SVGOutput width={512} height={512} />
     </ReactFlowProvider>
-  );
+      <div className="absolute bottom-0 lg:top-0 right-0 flex flex-col md:flex-row lg:flex-col z-10 gap-4 justify-between p-4 w-full lg:w-1/3 h-1/3 lg:h-full">
+        <SVGOutput width={512} height={512} />
+        <SVGMeta />
+      </div>
+
+      <NodeMenu />
+    </div>
+  )
 }
