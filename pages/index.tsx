@@ -1,5 +1,4 @@
 import Head from "next/head";
-import SVGNodeEditor from "@/components/layout/SVGNodeEditor";
 import Layout from "@/components/layout/Layout";
 
 export default function Home() {
@@ -12,9 +11,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout />
-      {/* <main className="flex gap-1 items-center p-24 h-screen w-screen">
-        <SVGNodeEditor />
-      </main> */}
     </>
   );
 }

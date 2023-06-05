@@ -13,7 +13,7 @@ function TransformNode({ id, data }: BaseNodeProps) {
 
   return (
     <CustomNodeWrapper>
-      <div className="bg-emerald-600 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
+      <div className="bg-emerald-600 px-2 py-1 text-gray-100 rounded-t-xl max-h-[40px]">
         Transform Path
       </div>
 

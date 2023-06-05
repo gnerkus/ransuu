@@ -12,7 +12,7 @@ function VectorNode({ id, data }: BaseNodeProps) {
 
   return (
     <CustomNodeWrapper>
-      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-lg max-h-[40px]">
+      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-xl max-h-[40px]">
         Vector
       </div>
       <div className="relative">
@@ -22,7 +22,7 @@ function VectorNode({ id, data }: BaseNodeProps) {
         <Handle type="source" position={Position.Right} id={id} />
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-b-lg">
+      <div className="bg-gray-50 p-4 rounded-b-xl">
         <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
           {Object.keys(nodeData).map((handleId) => (
             <NodeTextInput
