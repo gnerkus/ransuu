@@ -8,31 +8,16 @@ import {
 import { nanoid } from "nanoid";
 import { create } from "zustand";
 import { BaseEdge, BaseNode, BaseNodeDataType } from "@/types/nodes";
-import dagInstance, { IDS, initDAG } from "@/svggraph/init";
+import dagInstance, { IDS, initialShape } from "@/svggraph/init";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
-import { DAGFunctions, Shape } from "@/svggraph/types";
-
-const initSVG: Shape = {
-  instance: [],
-  path: [
-    { command: "M", args: [0, 0] },
-    { command: "H", args: [0 + 32] },
-    { command: "V", args: [0 + 32] },
-    { command: "H", args: [0] },
-    { command: "z", args: [] },
-  ],
-  attributes: {
-    fill: "#cc3399",
-    stroke: "#ffffff",
-  },
-};
+import { SVGData } from "@/svggraph/types";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
 export type FlowState = {
-  sourceSVG: Shape;
-  graphOutput: DAGFunctions;
+  sourceSVG: SVGData;
+  graphOutput: SVGData;
   nodes: BaseNode[];
   edges: BaseEdge[];
   onNodesChange: OnChange<NodeChange>;
@@ -61,8 +46,8 @@ export const useGraphOutput = () =>
   useStore((store: FlowState) => store.graphOutput);
 
 export const useStore = create<FlowState>((set, get) => ({
-  graphOutput: initDAG,
-  sourceSVG: initSVG,
+  graphOutput: initialShape,
+  sourceSVG: initialShape,
   nodes: [
     {
       id: IDS.inputID,
@@ -113,9 +98,10 @@ export const useStore = create<FlowState>((set, get) => ({
         },
         data: {
           translate: { x: 0, y: 0 },
-          rotate: { angle: 0, centerX: 0, centerY: 0 },
+          rotate: { angle: 0 },
           scale: { x: 1, y: 1 },
-          skew: { x: 0, y: 0 },
+          skewX: { value: 0},
+          skewY: { value: 0},
         },
       },
     },
@@ -168,7 +154,7 @@ export const useStore = create<FlowState>((set, get) => ({
     );
 
     // solve the graph and update the store
-    const output = dagInstance.solve().get(IDS.outputID) as DAGFunctions;
+    const output = dagInstance.solve().get(IDS.outputID) as SVGData;
     set({
       graphOutput: output,
       nodes: get().nodes.map((node) =>

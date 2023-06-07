@@ -1,10 +1,10 @@
 import VectorNode from "@/components/nodes/VectorNode";
 import { Edge, NodeProps } from "reactflow";
-import { Point, Rotation, TransformData } from "./path";
 import { XYPosition } from "reactflow";
 import GroupInputNode from "@/components/nodes/GroupInputNode";
 import GroupOutputNode from "@/components/nodes/GroupOutputNode";
 import TransformNode from "@/components/nodes/TransformNode";
+import { Point, TransformData } from "@/svggraph/types";
 
 export const nodeTypes = {
   svg_vectorNode: VectorNode,
@@ -15,7 +15,7 @@ export const nodeTypes = {
 
 export type BaseNodeUpdateData = Record<string, string>;
 
-export type BaseNodeDataType = Point | Rotation | TransformData | {};
+export type BaseNodeDataType = Point | TransformData | {};
 
 export type BaseNodeProps = NodeProps & {
   data: {

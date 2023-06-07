@@ -1,11 +1,6 @@
 import { nanoid } from "nanoid";
 import Vertex from "./Vertex";
-import { ResultMap } from "./types";
-
-type LeafNodesResult = {
-  freqMap: Map<Vertex<any, any>, number>;
-  leafNodes: Vertex<any, any>[];
-};
+import { SVGResultMap } from "./types";
 
 const isNode = (vertex: unknown) => vertex instanceof Vertex;
 
@@ -22,7 +17,7 @@ const isNode = (vertex: unknown) => vertex instanceof Vertex;
  *    ]);
  * @returns {!Map}
  */
-const removeOrphans = (graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>) => {
+function removeOrphans<VertexType>(graph: Map<VertexType, Set<VertexType>>) {
   for (const [vertex, outputs] of Array.from(graph.entries())) {
     if (outputs.size === 0 && Boolean(vertex)) {
       graph.delete(vertex);
@@ -35,7 +30,7 @@ const removeOrphans = (graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>) => {
   // repeat if new orphans were created
   if (
     Array.from(graph.entries()).reduce(
-      (accumulator, entry: [Vertex<any, any>, Set<Vertex<any, any>>]) =>
+      (accumulator, entry: [VertexType, Set<VertexType>]) =>
         accumulator || (entry[1].size === 0 && Boolean(entry[0])),
       false
     )
@@ -53,13 +48,16 @@ const removeOrphans = (graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>) => {
  *  ['A', new Set(['B', 'C'])]
  * ])
  * @returns {
- *  freqMap: Map<Vertex<any, any>, number>,
- * leafNodes: Vertex<any, any>[]
+ *  freqMap: Map<VertexType, number>,
+ * leafNodes: VertexType[]
  * }
  */
-const getLeafNodes = (
-  graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>
-): LeafNodesResult => {
+function getLeafNodes<VertexType>(
+  graph: Map<VertexType, Set<VertexType>>
+): {
+  freqMap: Map<VertexType, number>;
+  leafNodes: VertexType[];
+} {
   // Build a map of the form:
   // { A: 0, B: 1, C: 3, E: 0, F: 1, D: 2 }
   // where each key in the DAG is notated with the number of times it
@@ -71,9 +69,9 @@ const getLeafNodes = (
    */
   const freqMap = Array.from(graph.keys()).reduce(
     (accumulator, nodeId) => accumulator.set(nodeId, 0),
-    new Map<Vertex<any, any>, number>()
+    new Map<VertexType, number>()
   );
-  Array.from(graph.values()).forEach((outputs: Set<Vertex<any, any>>) =>
+  Array.from(graph.values()).forEach((outputs: Set<VertexType>) =>
     outputs.forEach((vertex) => {
       const vertexFreq = freqMap.get(vertex);
 
@@ -109,10 +107,10 @@ const getLeafNodes = (
  *    ]);
  * @returns {!Array<!Vertex>}
  */
-const topoSort = (
-  graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>
-): Vertex<any, any>[] => {
-  const { freqMap, leafNodes } = getLeafNodes(graph);
+function topoSort<VertexType>(
+  graph: Map<VertexType, Set<VertexType>>
+): VertexType[] {
+  const { freqMap, leafNodes } = getLeafNodes<VertexType>(graph);
 
   // The result array.
   const sortedNodes = [];
@@ -135,17 +133,17 @@ const topoSort = (
   return sortedNodes;
 };
 
-export default class DAG {
+export default class DAG<VertexType extends Vertex<any>> {
   readonly id: string;
-  readonly root: Vertex<any, any>;
-  readonly graph: Map<Vertex<any, any>, Set<Vertex<any, any>>>;
-  constructor(root: Vertex<any, any>) {
+  readonly root: VertexType;
+  readonly graph: Map<VertexType, Set<VertexType>>;
+  constructor(root: VertexType) {
     this.id = nanoid(6);
     this.graph = new Map();
     this.root = root;
   }
 
-  getNode(id: string): Vertex<any, any> | undefined {
+  getNode(id: string): VertexType | undefined {
     return Array.from(this.graph.keys()).find((vertex) => vertex.id === id);
   }
 
@@ -153,19 +151,22 @@ export default class DAG {
    *
    * @returns a list of nodes in order of addition
    */
-  getNodes(): Vertex<any, any>[] {
+  getNodes(): VertexType[] {
     return Array.from(this.graph.keys());
   }
 
-  getTopo(): Vertex<any, any>[] {
+  getTopo(): VertexType[] {
     return topoSort(this.graph);
   }
 
-  getLeafs(): LeafNodesResult {
+  getLeafs(): {
+    freqMap: Map<VertexType, number>;
+    leafNodes: VertexType[];
+  } {
     return getLeafNodes(this.graph);
   }
 
-  getOrphans(): Vertex<any, any>[] {
+  getOrphans(): VertexType[] {
     const orphans = [];
     for (const [vertex, outputs] of Array.from(this.graph.entries())) {
       if (outputs.size === 0 && Boolean(vertex)) {
@@ -181,7 +182,7 @@ export default class DAG {
    * @param node the node to be added
    * @returns false, if the node is invalid otherwise, returns the node
    */
-  addNode(node: Vertex<any, any>): false | Vertex<any, any> {
+  addNode(node: VertexType): false | VertexType {
     if (!isNode(node)) return false;
     if (this.graph.has(node)) return node;
 
@@ -189,7 +190,7 @@ export default class DAG {
     return node;
   }
 
-  deleteNode(node: Vertex<any, any>) {
+  deleteNode(node: VertexType) {
     let deleted = false;
     if (isNode(node) && node !== this.root) {
       deleted = this.graph.delete(node);
@@ -205,10 +206,10 @@ export default class DAG {
   }
 
   connect(
-    input: Vertex<any, any>,
-    target: Vertex<any, any>,
+    input: VertexType,
+    target: VertexType,
     inputHandlePath: string[]
-  ): boolean | DAG {
+  ): boolean | DAG<VertexType> {
     if (!(isNode(input) && isNode(target))) {
       return false;
     }
@@ -243,7 +244,7 @@ export default class DAG {
     return this;
   }
 
-  disconnect(input: Vertex<any, any>, target: Vertex<any, any>): boolean | DAG {
+  disconnect(input: VertexType, target: VertexType): boolean | DAG<VertexType> {
     if (!(isNode(input) && isNode(target))) {
       return false;
     }
@@ -268,7 +269,7 @@ export default class DAG {
   }
 
   solve() {
-    const resultMap: ResultMap = new Map();
+    const resultMap = new Map<string, any>();
 
     const noOrphans = removeOrphans(this.graph);
     const validTopoNodes = this.getTopo().filter((node) => noOrphans.has(node));

@@ -1,25 +1,15 @@
+import { rect, withAttribs, asPath } from "@thi.ng/geom";
 import { nanoid } from "nanoid";
-import DAG from "./DAG";
 import SVGOutput from "./nodes/SVGOutput";
-import { DAGFunctions } from "./types";
+import DAG from "./DAG";
 import SVGInput from "./nodes/SVGInput";
 import SVGVector from "./nodes/SVGVector";
 import SVGTransformNode from "./nodes/SVGTransformNode";
+import { Vec2 } from "@thi.ng/vectors";
+import Vertex from "./Vertex";
+import { NodeAttrType } from "./types";
 
-export const initDAG: DAGFunctions = {
-  instance: [],
-  path: () => [
-    { command: "M", args: [0, 0] },
-    { command: "H", args: [0 + 32] },
-    { command: "V", args: [0 + 32] },
-    { command: "H", args: [0] },
-    { command: "z", args: [] },
-  ],
-  attributes: {
-    fill: () => "#cc3399",
-    stroke: () => "#ffffff",
-  },
-};
+export const initialShape = asPath(withAttribs(rect(5), { fill: "#cc3399", stroke: "#ffffff" }));
 
 const rootID = nanoid(6);
 const inputID = nanoid(6);
@@ -34,23 +24,21 @@ export const IDS = {
   initTransformID,
 };
 
-const graphRoot = new SVGOutput(rootID, "svg_rootNode", initDAG);
-const dagInstance = new DAG(graphRoot);
-const groupOutput = new SVGOutput(outputID, "svg_groupOutputNode", initDAG);
-const groupInput = new SVGInput(inputID, "svg_groupInputNode", initDAG);
-const initVector = new SVGVector(initVectorID, "svg_vectorNode", {
-  x: 0,
-  y: 0,
-});
+const graphRoot = new SVGOutput(rootID, "svg_rootNode", initialShape);
+const dagInstance = new DAG<Vertex<NodeAttrType>>(graphRoot);
+const groupOutput = new SVGOutput(outputID, "svg_groupOutputNode", initialShape);
+const groupInput = new SVGInput(inputID, "svg_groupInputNode", initialShape);
+const initVector = new SVGVector(initVectorID, "svg_vectorNode", new Vec2([0, 0]));
 const initTransform = new SVGTransformNode(
   initTransformID,
   "svg_transformNode",
   {
-    shape: initDAG,
-    translate: { x: 0, y: 0 },
-    rotate: { angle: 0, centerX: 0, centerY: 0 },
-    scale: { x: 1, y: 1 },
-    skew: { x: 0, y: 0 },
+    shape: initialShape,
+    translate: new Vec2([0, 0]),
+    rotate: { value: 0},
+    scale: new Vec2([1, 1]),
+    skewX: {value: 0},
+    skewY: {value: 0},
   }
 );
 dagInstance.addNode(groupOutput);
