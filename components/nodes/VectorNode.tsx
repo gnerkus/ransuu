@@ -3,8 +3,8 @@ import React, { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { NodeTextInput } from "../NodeTextInput";
-import { Point } from "@/types/path";
 import { useHandleNodeInput } from "@/store/store";
+import { Point } from "@/svggraph/types";
 
 function VectorNode({ id, data }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();

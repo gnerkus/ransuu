@@ -4,11 +4,11 @@ import CustomNodeWrapper from "../CustomNodeWrapper";
 import { memo } from "react";
 import { NodeTextInput } from "../NodeTextInput";
 import { useHandleNodeInput } from "@/store/store";
-import { TransformNodeData } from "@/svggraph/types";
+import { TransformData } from "@/svggraph/types";
 
 function TransformNode({ id, data }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
-  const nodeData = data.data as TransformNodeData;
+  const nodeData = data.data as TransformData;
   const externalInputs = data.externalInputs;
 
   return (
@@ -75,7 +75,7 @@ function TransformNode({ id, data }: BaseNodeProps) {
                   key={handleId}
                   handleId={handleId}
                   value={`${
-                    nodeData.rotate[handleId as "angle" | "centerX" | "centerY"]
+                    nodeData.rotate[handleId as "value"]
                   }`}
                   onChange={handleNodeInput(id, "rotate", handleId)}
                 />
@@ -108,20 +108,41 @@ function TransformNode({ id, data }: BaseNodeProps) {
         ) : null}
       </div>
 
-      {/* Skew */}
+      {/* SkewX */}
 
       <div className="relative">
-        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">Skew:</div>
-        <Handle type="target" position={Position.Left} id="skew" />
-        {!externalInputs?.skew ? (
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">Skew X:</div>
+        <Handle type="target" position={Position.Left} id="skewX" />
+        {!externalInputs?.skewX ? (
           <div className="bg-gray-50 p-4 rounded-b-lg">
             <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
-              {Object.keys(nodeData.skew).map((handleId) => (
+              {Object.keys(nodeData.skewX).map((handleId) => (
                 <NodeTextInput
                   key={handleId}
                   handleId={handleId}
-                  value={`${nodeData.skew[handleId as "x" | "y"]}`}
-                  onChange={handleNodeInput(id, "skew", handleId)}
+                  value={`${nodeData.skewX[handleId as "value"]}`}
+                  onChange={handleNodeInput(id, "skewX", handleId)}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* SkewY */}
+
+      <div className="relative">
+        <div className="px-4 py-1 bg-gray-50 text-left max-h-[40px]">Skew Y:</div>
+        <Handle type="target" position={Position.Left} id="skewY" />
+        {!externalInputs?.skewY ? (
+          <div className="bg-gray-50 p-4 rounded-b-lg">
+            <div className="bg-gray-200 text-gray-800 rounded-lg divide-y-2 divide-gray-300">
+              {Object.keys(nodeData.skewY).map((handleId) => (
+                <NodeTextInput
+                  key={handleId}
+                  handleId={handleId}
+                  value={`${nodeData.skewY[handleId as "value"]}`}
+                  onChange={handleNodeInput(id, "skewY", handleId)}
                 />
               ))}
             </div>

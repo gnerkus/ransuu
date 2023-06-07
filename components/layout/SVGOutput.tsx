@@ -1,31 +1,5 @@
-import { useGraphOutput, useSourceSVG } from "@/store/store";
-import { serializeAttributes } from "@/svggraph/utils";
-import { stringifyPathData } from "@/utils/pointsToSVG";
-
-/**
- * How does the render work
- *
- * Goal: we build an svg from the ground up
- *
- * Input (via props):
- *  - dagFunctions: DAGFunctions (from graph)
- *  - shape: Shape (from state)
- *
- * If there is a single item:
- * 1. create an <svg> [DONE]
- * 2. create a <g> [DONE]
- * 3. create a <path> [DONE]
- * 4. get the function from dagFunctions.path [DONE]
- * 5. apply the function to shape.path [DONE]
- * 6. stringify the result and set it as the "d" of the path [DONE]
- * 7. for each attribute [DONE]
- *  1. get the attributes function from dagFunctions
- *  2. get the original value from shape
- *  3. apply the function to the original value
- *  4. serialize the result
- *  5. set as prop
- *
- */
+import { useGraphOutput } from "@/store/store";
+import * as svg from "@thi.ng/hiccup-svg";
 
 type SVGOutputProps = {
   width: number;
@@ -33,8 +7,13 @@ type SVGOutputProps = {
 };
 
 export default function SVGOutput({width, height}: SVGOutputProps) {
-  const sourceSVG = useSourceSVG();
   const output = useGraphOutput();
+
+  const parsedResult = svg.convertTree(output);
+
+  if (!parsedResult) {
+    return null;
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-md shadow-gray-200 w-full md:w-1/2 lg:w-full h-full lg:h-1/3">
@@ -44,14 +23,7 @@ export default function SVGOutput({width, height}: SVGOutputProps) {
       height={height}
       viewBox="0 0 512 512"
     >
-      {/* main path */}
-      <g {...serializeAttributes(sourceSVG.attributes, output.attributes, 0)}>
-        <path
-          d={stringifyPathData({
-            pathData: output.path(sourceSVG.path, 0),
-          })}
-        ></path>
-      </g>
+      <path {...parsedResult[1]} />        
     </svg>
     </div>
   );
