@@ -46,7 +46,7 @@ class SVGTransformNode extends Vertex<TransformNodeAttrType> {
       this.attrs.shape,
       concat(
         [],
-        translation23([], [translate.x, translate.y]),
+        translation23([], [Number(translate.x), Number(translate.y)]),
         skewX23([], skewX.value),
         skewY23([], skewY.value),
         rotation23([], rotate.value),
