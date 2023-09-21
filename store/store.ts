@@ -48,6 +48,9 @@ export const useSourceSVG = () =>
 export const useGraphOutput = () =>
   useStore((store: FlowState) => store.graphOutput);
 
+export const useHandleAddNode = () =>
+  useStore((store: FlowState) => store.addNode);
+
 export const useStore = create<FlowState>((set, get) => ({
   graphOutput: initialShape,
   sourceSVG: initialShape,
