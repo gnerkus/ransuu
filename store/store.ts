@@ -7,7 +7,12 @@ import {
 } from "reactflow";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
-import { BaseEdge, BaseNode, BaseNodeDataType, UINodeType } from "@/types/nodes";
+import {
+  BaseEdge,
+  BaseNode,
+  BaseNodeDataType,
+  UINodeType,
+} from "@/types/nodes";
 import dagInstance, { IDS, initialShape } from "@/svggraph/init";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
@@ -32,6 +37,7 @@ export type FlowState = {
   ) => void;
   addEdge: (data: Connection) => void;
   addNode: (nodeType: UINodeType) => void;
+  deleteNode: (id: string) => void;
   handleNodeInput: (
     nodeId: string,
     dataHandle: string,
@@ -50,6 +56,9 @@ export const useGraphOutput = () =>
 
 export const useHandleAddNode = () =>
   useStore((store: FlowState) => store.addNode);
+
+export const useHandleDeleteNode = () =>
+  useStore((store: FlowState) => store.deleteNode);
 
 export const useStore = create<FlowState>((set, get) => ({
   graphOutput: initialShape,
@@ -106,8 +115,8 @@ export const useStore = create<FlowState>((set, get) => ({
           translate: { x: 0, y: 0 },
           rotate: { angle: 0 },
           scale: { x: 1, y: 1 },
-          skewX: { value: 0},
-          skewY: { value: 0},
+          skewX: { value: 0 },
+          skewY: { value: 0 },
         },
       },
     },
@@ -189,28 +198,50 @@ export const useStore = create<FlowState>((set, get) => ({
     switch (nodeType) {
       case UINodeType.svg_vectorNode:
         const newNodeID = nanoid(6);
-        const initVector = new SVGVector(newNodeID, "svg_vectorNode", new Vec2([0, 0]));
+        const initVector = new SVGVector(
+          newNodeID,
+          "svg_vectorNode",
+          new Vec2([0, 0])
+        );
         dagInstance.addNode(initVector);
 
         set({
-          nodes: [...get().nodes, {
-            id: newNodeID,
-          type: "svg_vectorNode",
-          position: {
-            x: 500,
-            y: 500,
-          },
-          data: {
-            data: {
-              x: 0,
-              y: 0,
+          nodes: [
+            ...get().nodes,
+            {
+              id: newNodeID,
+              type: "svg_vectorNode",
+              position: {
+                x: 500,
+                y: 500,
+              },
+              data: {
+                data: {
+                  x: 0,
+                  y: 0,
+                },
+              },
             },
-          },
-          }]
-        })
+          ],
+        });
         break;
       default:
         break;
+    }
+  },
+
+  deleteNode(id: string) {
+    const nodeToDelete = dagInstance.getNode(id);
+    if (nodeToDelete) {
+      dagInstance.deleteNode(nodeToDelete);
+
+      set({
+        nodes: [
+          ...get().nodes.filter((node) => {
+            return node.id !== id;
+          }),
+        ],
+      });
     }
   },
 

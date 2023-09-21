@@ -3,17 +3,19 @@ import React, { memo } from "react";
 import { Handle, Position } from "reactflow";
 import CustomNodeWrapper from "../CustomNodeWrapper";
 import { NodeTextInput } from "../NodeTextInput";
-import { useHandleNodeInput } from "@/store/store";
+import { useHandleDeleteNode, useHandleNodeInput } from "@/store/store";
 import { Point } from "@/svggraph/types";
 
 function VectorNode({ id, data }: BaseNodeProps) {
   const handleNodeInput = useHandleNodeInput();
+  const handleDeleteNode = useHandleDeleteNode();
   const nodeData = data.data as Point;
 
   return (
     <CustomNodeWrapper>
-      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-xl max-h-[40px]">
-        Vector
+      <div className="bg-rose-700 px-2 py-1 text-gray-100 rounded-t-xl max-h-[40px] flex justify-between">
+        <div>Vector</div>
+        <button onClick={() => handleDeleteNode(id)}>🚮</button>
       </div>
       <div className="relative">
         <div className="px-4 py-1 bg-gray-50 text-right max-h-[40px]">
