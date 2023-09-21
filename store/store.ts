@@ -7,11 +7,13 @@ import {
 } from "reactflow";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
-import { BaseEdge, BaseNode, BaseNodeDataType } from "@/types/nodes";
+import { BaseEdge, BaseNode, BaseNodeDataType, UINodeType } from "@/types/nodes";
 import dagInstance, { IDS, initialShape } from "@/svggraph/init";
 import lodashSet from "lodash.set";
 import { ChangeEvent } from "react";
 import { SVGData } from "@/svggraph/types";
+import SVGVector from "@/svggraph/nodes/SVGVector";
+import { Vec2 } from "@thi.ng/vectors";
 
 type OnChange<ChangesType> = (changes: ChangesType[]) => void;
 
@@ -29,6 +31,7 @@ export type FlowState = {
     data: any
   ) => void;
   addEdge: (data: Connection) => void;
+  addNode: (nodeType: UINodeType) => void;
   handleNodeInput: (
     nodeId: string,
     dataHandle: string,
@@ -178,6 +181,35 @@ export const useStore = create<FlowState>((set, get) => ({
   handleNodeInput:
     (nodeId, dataHandle, inputHandle) => (evt: ChangeEvent<HTMLInputElement>) =>
       get().updateNode(nodeId, dataHandle, inputHandle, evt.target.value),
+
+  addNode(nodeType) {
+    switch (nodeType) {
+      case UINodeType.svg_vectorNode:
+        const newNodeID = nanoid(6);
+        const initVector = new SVGVector(newNodeID, "svg_vectorNode", new Vec2([0, 0]));
+        dagInstance.addNode(initVector);
+
+        set({
+          nodes: [...get().nodes, {
+            id: newNodeID,
+          type: "svg_vectorNode",
+          position: {
+            x: 500,
+            y: 500,
+          },
+          data: {
+            data: {
+              x: 0,
+              y: 0,
+            },
+          },
+          }]
+        })
+        break;
+      default:
+        break;
+    }
+  },
 
   addEdge(data) {
     if (!data.source || !data.target) return;

@@ -6,6 +6,13 @@ import GroupOutputNode from "@/components/nodes/GroupOutputNode";
 import TransformNode from "@/components/nodes/TransformNode";
 import { Point, TransformData } from "@/svggraph/types";
 
+export enum UINodeType {
+  svg_vectorNode,
+  svg_transformNode,
+  svg_groupInputNode,
+  svg_groupOutputNode,
+}
+
 export const nodeTypes = {
   svg_vectorNode: VectorNode,
   svg_transformNode: TransformNode,
